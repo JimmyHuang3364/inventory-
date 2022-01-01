@@ -12,6 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2",
-    "express-handlebars": "^5.3.4"
+    "express-handlebars": "^5.3.4",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.4",
+    "sequelize-cli": "^6.3.0"
   }
 }
