@@ -25,6 +25,7 @@
           {{!-- <li class="nav-item">
             <a class="nav-link" href="/">總攬</a>
           </li> --}}
+          {{#if user}}
           <li class="nav-item">
             <a class="nav-link" href="/warehouse">在庫查詢</a>
           </li>
@@ -40,8 +41,12 @@
           <li class="nav-item">
             <a class="nav-link disabled" href="/other">其它</a>
           </li>
+          {{/if}}
         </ul>
       </div>
+      {{#if user}}
+      <a href="/logout"><button class="btn btn-outline-danger my-2 my-sm-0">登出</button></a>
+      {{/if}}
     </nav>
   </head>
 

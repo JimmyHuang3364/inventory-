@@ -1,5 +1,5 @@
 let routes = require('./routes')
 
-module.exports = (app) => {
+module.exports = (app, passport) => {
   app.use('/', routes)
 }
