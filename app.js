@@ -1,6 +1,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const session = require('express-session')
+const methodOverride = require('method-override')
 const flash = require('connect-flash')
 const passport = require('./config/passport')
 const app = express()
@@ -23,6 +24,8 @@ app.use((req, res, next) => {
   res.locals.user = req.user
   next()
 })
+
+app.use(methodOverride('_method'))
 
 app.listen(port, () => {
   console.log('server is running!!')

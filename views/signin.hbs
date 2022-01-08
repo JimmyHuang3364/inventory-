@@ -4,6 +4,16 @@
     <div class="text-center mb-4">
       <h1 class="h3 mb-3 font-weight-normal text-white">Sign In</h1>
     </div>
+    {{#if success_messages}}
+    <div class="alert alert-success" role="alert" style="margin: 5px 0 ;">
+      {{success_messages}}
+    </div>
+    {{/if}}
+    {{#if error_messages}}
+    <div class="alert alert-danger" role="alert" style="margin: 5px 0 ;">
+      {{error_messages}}
+    </div>
+    {{/if}}
     <div class="form-label-group text-white">
       <label for="inputName">User</label>
       <input type="text" name="name" class="form-control" placeholder="name" required autofocus>

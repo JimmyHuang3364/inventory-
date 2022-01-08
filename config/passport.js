@@ -13,7 +13,6 @@ passport.use(new LocalStrategy(
   },
   // authenticate user
   (req, username, password, cb) => {
-    console.log(username)
     User.findOne({ where: { name: username } }).then(user => {
       if (!user) return cb(null, false, req.flash('error_messages', '使用者不存在!!'))
       if (!bcrypt.compareSync(password, user.password)) return cb(null, false, req.flash('error_messages', '使用者或密碼錯誤!!'))
