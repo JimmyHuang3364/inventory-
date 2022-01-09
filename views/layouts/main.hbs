@@ -42,6 +42,9 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">其它</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <a class="dropdown-item" href="/password">變更密碼</a>
+              {{#if user.isAdmin}}
+              <a class="dropdown-item" href="/signup">註冊使用者</a>
+              {{/if}}
             </div>
           </li>
           {{/if}}

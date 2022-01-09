@@ -20,6 +20,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.BOOLEAN
       },
+      permissionLevel: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

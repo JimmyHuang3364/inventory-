@@ -12,6 +12,7 @@ module.exports = {
       name: SEED_USER.name,
       password: bcrypt.hashSync(SEED_USER.password, bcrypt.genSaltSync(10), null),
       isAdmin: 1,
+      permissionLevel: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {})

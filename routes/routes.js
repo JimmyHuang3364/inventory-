@@ -22,6 +22,8 @@ const authenticateAdmin = (req, res, next) => {
 
 router.get('/signin', userContorller.signInPage) //瀏覽登入頁面
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userContorller.signIn) //發出登入請求
+router.get('/signup', authenticateAdmin, adminContorller.signUpPage) //瀏覽使用者註冊頁面
+router.post('/signup', authenticateAdmin, adminContorller.signUp) //發出新使用者註冊請求
 router.get('/logout', userContorller.logOut) //發出登出請求
 
 router.get('/', authenticated, (req, res) => { res.redirect('/inventory') }) //轉入瀏覽主頁面

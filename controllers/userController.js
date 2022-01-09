@@ -1,5 +1,3 @@
-const db = require('../models')
-const User = db.User
 const userService = require('../services/userService.js')
 
 const userContorller = {
@@ -8,12 +6,12 @@ const userContorller = {
   },
   signIn: (req, res) => {
     req.flash('success_messages', '登入成功')
-    res.redirect('/inventory')
+    return res.redirect('/inventory')
   },
   logOut: (req, res) => {
     req.flash('success_messages', '登出成功')
     req.logOut()
-    res.redirect('/signin')
+    return res.redirect('/signin')
   },
   putPassword: (req, res) => {
     userService.putPassword(req, res, (data) => {
@@ -24,12 +22,12 @@ const userContorller = {
       else if (data['status'] === 'success') {
         req.flash('success_messages', data['message'])
         req.logOut()
-        res.redirect('/signin')
+        return res.redirect('/signin')
       }
     })
   },
   changePasswordPage: (req, res) => {
-    res.render('password')
+    return res.render('password')
   }
 }
 
