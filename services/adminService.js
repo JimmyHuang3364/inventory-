@@ -18,9 +18,8 @@ const adminService = {
             permissionLevel: Number(req.body.permissionLevel)
           })
             .then((user) => {
-              callback({ status: 'success', message: `新使用者${user.name}新增成功!!` })
+              callback({ status: 'success', message: `使用者 ${user.name} 新增成功!!` })
             })
-
         }
       })
     } else {

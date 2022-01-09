@@ -35,15 +35,15 @@
           <li class="nav-item">
             <a class="nav-link disabled" href="/products">出入庫紀錄</a>
           </li>
-          {{!-- <li class="nav-item">
-            <a class="nav-link" href="/customers">発注人</a>
-          </li> --}}
+          <li class="nav-item">
+            <a class="nav-link" href="/manager/customers">瀏覽発注人</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">其它</a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="/password">變更密碼</a>
+              <a class="dropdown-item" href="/user/password">變更密碼</a>
               {{#if user.isAdmin}}
-              <a class="dropdown-item" href="/signup">註冊使用者</a>
+              <a class="dropdown-item" href="/admin/signup">註冊使用者</a>
               {{/if}}
             </div>
           </li>
