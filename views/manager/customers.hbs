@@ -1,24 +1,33 @@
 <div class="container">
+
+  <div class="text-center">
+    {{#if success_messages}}
+    <div class="alert alert-success" role="alert" style="margin: 5px 0 ;">{{success_messages}}</div>
+    {{/if}}
+  </div>
   <div class="d-flex justify-content-end"><a class="btn btn-success my-3" href='/manager/customers/create'>+発注人</a></div>
+
   <div class="d-flex flex-wrap justify-content-between">
 
-    <a class="text-white" style="text-decoration: none; width: 540px;" href="">
+    {{#each customers}}
+    <a class="text-white" style="text-decoration: none; width: 540px;" href="/manager/customers/{{this.id}}">
       <div class="card mb-3 mx-1 text-white" style="background-color: rgb(26, 21, 48);">
         <div class="row no-gutters">
           <div class="col-md-4" style="text-align: center;">
-            <img style="width: 176px; height: 159px;" src="https://huangyedu.com/Data/Thumb/14/aad4f88888b08306752c7ca9bba3d9f4.jpg" alt="...">
+            <img style="width: 176px; height: 159px;" src="{{this.photo}}" alt="...">
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">台弟</h5>
-              <p class="card-text mb-1">地址: 台中市西區華美西街XXX號</p>
-              <p class="card-text mb-1">Tel: 04-XXXXXXXX</p>
-              <p class="card-text mb-1">Fax: 04-XXXXXXXX</p>
+              <h5 class="card-title">{{this.name}}</h5>
+              <p class="card-text mb-1">地址: {{this.address}}</p>
+              <p class="card-text mb-1">Tel: {{this.tel}}</p>
+              <p class="card-text mb-1">Fax: {{this.fax}}</p>
             </div>
           </div>
         </div>
       </div>
     </a>
+    {{/each}}
 
   </div>
 

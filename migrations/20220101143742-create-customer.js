@@ -12,13 +12,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      address: {
+        type: Sequelize.STRING
+      },
       tel: {
         type: Sequelize.STRING
       },
       fax: {
         type: Sequelize.STRING
       },
-      address: {
+      photo: {
         type: Sequelize.STRING
       },
       createdAt: {

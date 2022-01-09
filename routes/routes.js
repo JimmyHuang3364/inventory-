@@ -24,7 +24,8 @@ const authenticateAdmin = (req, res, next) => { //確認是否為admin
 const authenticateManager = (req, res, next) => { //確認是否為manager
   if (req.isAuthenticated()) {
     if (req.user.permissionLevel <= 2 & req.user.permissionLevel > 0) { return next() }
-    return res.redirect('/')
+    req.flash('error_messages', '你無權進入発注人頁面')
+    return res.redirect('/inventory')
   }
   res.redirect('/signin')
 }
@@ -49,7 +50,8 @@ router.get('/products', (req, res) => { res.send(`OOPS!!  施工中...`) }) //�
 
 // about Customer
 router.get('/manager/customers', authenticateManager, managerController.getCustomers) //瀏覽所有客戶頁面
-router.get('/manager/customers/create', authenticateManager, (req, res) => { res.render('manager/createCustomer') }) //瀏覽新增客戶頁面
+router.get('/manager/customers/:id', authenticateManager, managerController.getCustomer) //瀏覽其一客戶頁面
+router.get('/manager/customers/create', authenticateManager, managerController.getCreateCustomer) //瀏覽新增客戶頁面
 router.post('/manager/customers/create', authenticateManager, managerController.postCustomer) //發出新增客戶請求
 ////
 
