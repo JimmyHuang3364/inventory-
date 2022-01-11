@@ -32,6 +32,30 @@ const managerService = {
           })
       }
     })
+  },
+  putCustomer: (req, res, callback) => {
+    return Customer.findByPk(req.params.id)
+      .then((customer) => {
+        customer.update({
+          name: req.body.name,
+          address: req.body.address,
+          tel: req.body.tel,
+          fax: req.body.fax,
+          photo: req.body.photo
+        })
+          .then((customer) => {
+            callback({ status: 'success', message: `発注人${customer.name}資料已成功修改!!` })
+          })
+      })
+  },
+  deleteCustomer: (req, res, callback) => {
+    return Customer.findByPk(req.params.id)
+      .then((customer) => {
+        customer.destroy()
+          .then(() => {
+            callback({ status: 'success', message: `発注人${customer.name}資料已成功刪除!!` })
+          })
+      })
   }
 }
 

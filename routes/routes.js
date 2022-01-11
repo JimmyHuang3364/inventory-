@@ -50,9 +50,12 @@ router.get('/products', (req, res) => { res.send(`OOPS!!  施工中...`) }) //�
 
 // about Customer
 router.get('/manager/customers', authenticateManager, managerController.getCustomers) //瀏覽所有客戶頁面
-router.get('/manager/customers/:id', authenticateManager, managerController.getCustomer) //瀏覽其一客戶頁面
 router.get('/manager/customers/create', authenticateManager, managerController.getCreateCustomer) //瀏覽新增客戶頁面
 router.post('/manager/customers/create', authenticateManager, managerController.postCustomer) //發出新增客戶請求
+router.get('/manager/customers/:id', authenticateManager, managerController.getCustomer) //瀏覽其一客戶頁面
+router.put('/manager/customers/:id', authenticateManager, managerController.putCustomer) //發出修改客戶資料請求
+router.delete('/manager/customers/:id', authenticateManager, managerController.deleteCustomer) //發出刪除客戶資料請求
+router.get('/manager/customers/:id/edit', authenticateManager, managerController.editCustomer) //瀏覽變更客戶資料頁
 ////
 
 router.get('/warehouse', (req, res) => { res.render('warehouse') }) //瀏覽在庫查詢頁面
