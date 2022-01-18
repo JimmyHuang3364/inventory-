@@ -58,6 +58,8 @@ router.delete('/manager/customers/:id', authenticateManager, managerController.d
 router.get('/manager/customers/:id/edit', authenticateManager, managerController.editCustomer) //瀏覽變更客戶資料頁
 ////
 
+router.get('/manager/partnumber/create', authenticateManager, managerController.getCreatePartNumber) //瀏覽新增部品頁面
+
 router.get('/warehouse', (req, res) => { res.render('warehouse') }) //瀏覽在庫查詢頁面
 
 router.get('/Warehousing', (req, res) => { res.render('Warehousing') }) //瀏覽入庫頁面

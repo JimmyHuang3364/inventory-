@@ -42,6 +42,9 @@ const managerController = {
       req.flash('success_messages', data['message'])
       return res.redirect('/manager/customers')
     })
+  },
+  getCreatePartNumber: (req, res) => {
+    res.render('manager/createPartNumber')
   }
 }
 

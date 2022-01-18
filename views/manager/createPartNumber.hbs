@@ -1,0 +1,39 @@
+<div class="container mt-5">
+  <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/partnumber/create" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
+    <div class="text-center mb-4">
+      <h3 class="mb-3 font-weight-normal text-white">新增部品</h3>
+    </div>
+    <div class="text-center">
+      {{#if error_messages}}
+      <div class="alert alert-danger" role="alert" style="margin: 5px 0 ;">{{error_messages}}</div>
+      {{/if}}
+    </div>
+    <div class="form-label-group text-white">
+      <label for="inputName">発注人<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
+      <input type="text" name="name" class="form-control" placeholder="名稱" value="" required autofocus>
+    </div>
+    <div class="form-label-group text-white mt-4">
+      <label for="inputPassword">部品番號<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
+      <input type="text" name="address" class="form-control" placeholder="" value="">
+    </div>
+    <div class="form-label-group text-white mt-4">
+      <label for="inputPassword">母部品<span class="text-danger" style="font-size: 10px;"> (無-請空白)</span></label>
+      <input type="text" name="tel" class="form-control" placeholder="" value="">
+    </div>
+    <div class="form-label-group text-white mt-4">
+      <label for="inputPassword">通稱</label>
+      <input type="text" name="fax" class="form-control" placeholder="" value="">
+    </div>
+    {{!-- <div class="form-label-group text-white mt-4">
+      <label for="inputPassword">價格</label>
+      <input type="text" name="fax" class="form-control" placeholder="" value="">
+    </div>
+    <div class="form-label-group text-white mt-4">
+      <label for="inputPassword">圖片</label>
+      <input type="text" name="fax" class="form-control" placeholder="" value="">
+    </div> --}}
+    <br />
+    <button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+  </form>
+
+</div>
