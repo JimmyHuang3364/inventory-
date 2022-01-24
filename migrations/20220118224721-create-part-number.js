@@ -14,6 +14,10 @@ module.exports = {
       commonName: {
         type: Sequelize.STRING
       },
+      quantity: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       customerId: {
         type: Sequelize.INTEGER
       },

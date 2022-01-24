@@ -10,19 +10,29 @@
     </div>
     <div class="form-label-group text-white">
       <label for="inputName">発注人<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
-      <input type="text" name="name" class="form-control" placeholder="名稱" value="" required autofocus>
+      <select class="custom-select" name="customer" id="affiliatedPartNumber" required>
+        <option selected></option>
+        {{#each customers}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+      </select>
     </div>
     <div class="form-label-group text-white mt-4">
       <label for="inputPassword">部品番號<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
-      <input type="text" name="address" class="form-control" placeholder="" value="">
+      <input type="text" name="name" class="form-control" placeholder="" value="" required>
     </div>
     <div class="form-label-group text-white mt-4">
       <label for="inputPassword">母部品<span class="text-danger" style="font-size: 10px;"> (無-請空白)</span></label>
-      <input type="text" name="tel" class="form-control" placeholder="" value="">
+      <select class="custom-select" name="affiliatedPartNumber" id="affiliatedPartNumber">
+        <option selected value="0"></option>
+        {{#each partNumbers}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+      </select>
     </div>
     <div class="form-label-group text-white mt-4">
       <label for="inputPassword">通稱</label>
-      <input type="text" name="fax" class="form-control" placeholder="" value="">
+      <input type="text" name="commonName" class="form-control" placeholder="" value="">
     </div>
     {{!-- <div class="form-label-group text-white mt-4">
       <label for="inputPassword">價格</label>

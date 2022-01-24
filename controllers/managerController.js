@@ -1,4 +1,3 @@
-const { redirect } = require('express/lib/response')
 const managerService = require('../services/managerService.js')
 
 const managerController = {
@@ -44,7 +43,20 @@ const managerController = {
     })
   },
   getCreatePartNumber: (req, res) => {
-    res.render('manager/createPartNumber')
+    managerService.getCreatePartNumber(req, res, (data) => {
+      return res.render('manager/createPartNumber', data)
+    })
+  },
+  postCreatePartNumber: (req, res) => {
+    managerService.postCreatePartNumber(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      } else {
+        req.flash('success_messages', data['message'])
+        return res.redirect('/warehouse')
+      }
+    })
   }
 }
 

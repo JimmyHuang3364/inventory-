@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   SubPartNumber.init({
     name: DataTypes.STRING,
     commonName: DataTypes.STRING,
+    quantity: DataTypes.INTEGER,
     partNumberId: DataTypes.INTEGER,
     customerId: DataTypes.INTEGER
   }, {

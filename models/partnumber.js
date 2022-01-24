@@ -12,11 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       PartNumber.belongsTo(models.Customer)
+      PartNumber.hasMany(models.SubPartNumber)
     }
   };
   PartNumber.init({
     name: DataTypes.STRING,
     commonName: DataTypes.STRING,
+    quantity: DataTypes.INTEGER,
     customerId: DataTypes.INTEGER
   }, {
     sequelize,

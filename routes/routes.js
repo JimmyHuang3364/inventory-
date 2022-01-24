@@ -5,6 +5,7 @@ const managerController = require('../controllers/managerController.js')
 const userContorller = require('../controllers/userController.js')
 const inventoryController = require('../controllers/inventoryController.js')
 const passport = require('passport')
+const partNoController = require('../controllers/partNoController.js')
 
 const authenticated = (req, res, next) => { //確認登入狀態
   if (req.isAuthenticated()) {
@@ -59,8 +60,9 @@ router.get('/manager/customers/:id/edit', authenticateManager, managerController
 ////
 
 router.get('/manager/partnumber/create', authenticateManager, managerController.getCreatePartNumber) //瀏覽新增部品頁面
+router.post('/manager/partnumber/create', authenticateManager, managerController.postCreatePartNumber) //發出新增部品請求
 
-router.get('/warehouse', (req, res) => { res.render('warehouse') }) //瀏覽在庫查詢頁面
+router.get('/warehouse', authenticated, partNoController.getParNumbers) //瀏覽在庫查詢頁面
 
 router.get('/Warehousing', (req, res) => { res.render('Warehousing') }) //瀏覽入庫頁面
 

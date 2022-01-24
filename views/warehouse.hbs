@@ -11,45 +11,54 @@
 
       <div class="mx-2">
         <h4 class="mt-4 text-white">発注人</h4>
-        <a class="nav-link" href="" style="color: rgb(255, 255, 255);">台弟</a>
-        <a class="nav-link  active" href="" style="color: rgb(243, 218, 75);">瑞浪</a>
+        <a class="nav-link text-white active" href="">全部</a>
+        <a class="nav-link text-white" href="">台弟</a>
+        <a class="nav-link text-white" href="">瑞浪</a>
       </div>
     </div>
 
     <div class="mt-5" style="flex-grow: 1;">
       <div class="mb-3">
+        {{#if success_messages}}
+        <div class="alert alert-success mx-5 mb-3" role="alert" style="margin: 5px 0 ; text-align: center;">{{success_messages}}</div>
+        {{/if}}
+
         <div class="m-auto text-white border border-white bg-primary rounded-top d-flex justify-content-between p-1" style="max-width: 90%;">
-          <h4 class="m-0">部品番號</h4>
+          <h4 class="m-0">部品</h4>
           <h4 class="m-0">在庫數</h4>
         </div>
+        {{#each partNumbers}}
         <div class="m-auto text-white border border-white d-flex justify-content-between p-1" style="max-width: 90%;">
-          <p class="m-0"><span class="text-warning" style="cursor: pointer;">-</span> xc545645645</p>
-          <p class="m-0">315</p>
+          <p class="m-0"><span class="text-warning" style="cursor: pointer;">-</span> {{this.name}}</p>
+          <p class="m-0">{{this.quantity}}</p>
         </div>
+
+        {{#if this.subPartNumbers}}
         <div>
           <div class="m-auto text-white border border-white" style="max-width: 90%;">
             <div class="pl-5 border border-white d-flex justify-content-between bg-info">
-              <h5 class="m-0">子部品番號</h5>
-              <h5 class="m-0">在庫數</h5>
+              <h6 class="m-0">子部品</h6>
+              <h6 class="m-0">在庫數</h6>
             </div>
+            {{#each this.subPartNumbers}}
             <div class="pl-5 border border-white d-flex justify-content-between">
-              <p class="m-0">xc545645645</p>
-              <p class="m-0">516</p>
+              <p class="m-0">{{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
+              <p class="m-0">{{this.quantity}}</p>
             </div>
-            <div class="pl-5 border border-white d-flex justify-content-between">
-              <p class="m-0">sa12313</p>
-              <p class="m-0">416</p>
-            </div>
-            <div class="pl-5 border border-white d-flex justify-content-between">
-              <p class="m-0">xs4564561</p>
-              <p class="m-0">20</p>
-            </div>
+            {{/each}}
           </div>
         </div>
+        {{/if}}
+        {{/each}}
+
+
+        {{!-- <div class="m-auto text-white border border-white d-flex justify-content-between p-1" style="max-width: 90%;">
+          <p class="m-0"><span class="text-warning" style="cursor: pointer;">-</span> xc545645645</p>
+          <p class="m-0">315</p>
+        </div> --}}
+
       </div>
 
     </div>
 
   </div>
-
-</div>
