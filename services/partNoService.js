@@ -14,7 +14,12 @@ const partNoService = {
           subPartNumbers: r.SubPartNumbers.map(sub => ({ ...sub.dataValues })),
           customerName: r.Customer.name
         }))
-        callback({ partNumbers: partNumbers })
+        Customer.findAll({
+          raw: true,
+          nest: true
+        }).then((customers) => {
+          callback({ partNumbers: partNumbers, customers: customers })
+        })
       })
   }
 }

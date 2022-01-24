@@ -4,16 +4,16 @@
 
     <div class="nav flex-column nav-pills" style="flex-basis: 10%; height:100%; text-align: center; background-color:rgb(49, 39, 92)">
       <div class="nav flex-column mx-2">
-        <a class="btn btn-warning mt-2 mb-4" href="/manager/partnumber/create" role="button">+ 新增部品</a>
         <a class="btn btn-info mb-2" href="/Warehousing" role="button">入庫</a>
         <a class="btn btn-success" href="/Shipment" role="button">出貨</a>
       </div>
 
       <div class="mx-2">
         <h4 class="mt-4 text-white">発注人</h4>
-        <a class="nav-link text-white active" href="">全部</a>
-        <a class="nav-link text-white" href="">台弟</a>
-        <a class="nav-link text-white" href="">瑞浪</a>
+        <a class="nav-link text-white active" href="/warehouse/all/partnumber">全部</a>
+        {{#each customers}}
+        <a class="nav-link text-white" href="/warehouse/{{this.name}}/partnumber">{{this.name}}</a>
+        {{/each}}
       </div>
     </div>
 

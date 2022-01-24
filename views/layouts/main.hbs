@@ -27,16 +27,15 @@
           </li> --}}
           {{#if user}}
           <li class="nav-item">
-            <a class="nav-link" href="/warehouse">部品在庫</a>
+            <a class="nav-link" href="/warehouse">倉庫</a>
           </li>
-          {{!-- <li class="nav-item">
-            <a class="nav-link" href="/products">品番</a>
-          </li> --}}
-          <li class="nav-item">
-            <a class="nav-link disabled" href="/products">出入庫紀錄</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/manager/customers">発注人</a>
+          <li class="nav-item dropdown">
+            {{!-- <a class="nav-link" href="/manager/customers">発注人/部品</a> --}}
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">管理清單</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/manager/customers">発注人</a>
+              <a class="dropdown-item" href="/manager/partnumbers">部品</a>
+            </div>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">其它</a>

@@ -4,7 +4,7 @@ const partNoController = {
   getParNumbers: (req, res) => {
     partService.getParNumbers(req, res, (data) => {
       console.log(data)
-      return res.render('warehouse', data)
+      return res.render('partnumbers', data)
     })
   }
 }
