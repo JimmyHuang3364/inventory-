@@ -64,9 +64,12 @@ router.get('/manager/partnumber/create', authenticateManager, managerController.
 router.post('/manager/partnumber/create', authenticateManager, managerController.postCreatePartNumber) //發出新增部品請求
 router.get('/manager/partnumbers', authenticateManager, managerController.getParNumbers) //瀏覽品番清單頁面
 router.delete('/manager/partnumbers/:id', authenticateManager, managerController.deletePartNumber) //刪除一般部品
+router.put('/manager/partnumbers/:id', authenticateManager, managerController.putPartNumber) //更新一般部品資料
 router.delete('/manager/subpartnumbers/:id', authenticateManager, managerController.deleteSubPartNumber) //刪除子部品
+router.put('/manager/subpartnumbers/:id', authenticateManager, managerController.putSubPartNumber) //刪除子部品
+router.get('/manager/partnumbers/:id/edit', authenticateManager, managerController.getPartNumber) //瀏覽變更一般部品資料頁
+router.get('/manager/subpartnumbers/:id/edit', authenticateManager, managerController.getSubPartNumber) //瀏覽變更子部品資料頁
 ////
-
 
 // router.get('/warehouse', authenticated, (req, res) => { res.redirect('/warehouse/all/partnumber') }) //瀏覽在庫查詢頁面
 

@@ -70,7 +70,6 @@ const managerController = {
 
   getParNumbers: (req, res) => {
     managerService.getParNumbers(req, res, (data) => {
-      // console.log(data)
       return res.render('partnumbers', data)
     })
   },
@@ -88,6 +87,46 @@ const managerController = {
     managerService.deletePartNumber(req, res, (data) => {
       req.flash('success_messages', data['message'])
       return res.redirect('back')
+    })
+  },
+
+  // 取得一般部品資料渲染編輯頁
+  getPartNumber: (req, res) => {
+    managerService.getPartNumber(req, res, (data) => {
+      return res.render('manager/createPartNumber', data)
+    })
+  },
+
+  // 取得子部品資料渲染編輯頁
+  getSubPartNumber: (req, res) => {
+    managerService.getSubPartNumber(req, res, (data) => {
+      return res.render('manager/createPartNumber', data)
+    })
+  },
+
+  // 更新一般部品資料
+  putPartNumber: (req, res) => {
+    managerService.putPartNumber(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      } else {
+        req.flash('success_messages', data['message'])
+        return res.redirect('/manager/partnumbers')
+      }
+    })
+  },
+
+  // 更新子部品資料
+  putSubPartNumber: (req, res) => {
+    managerService.putSubPartNumber(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      } else {
+        req.flash('success_messages', data['message'])
+        return res.redirect('/manager/partnumbers')
+      }
     })
   }
 }

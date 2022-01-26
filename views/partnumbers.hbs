@@ -3,9 +3,9 @@
   <div class="mt-3">
     <div class="d-flex flex-row justify-content-between align-items-center">
       <div class="">
-        <a class="btn btn-outline-secondary active" href="/manager/partnumbers" role="button">全部</a>
+        <a class="btn btn-outline-secondary {{#if customerId}}{{else}}active{{/if}}" href="/manager/partnumbers" role="button">全部 {{CustomerId}}</a>
         {{#each customers}}
-        <a class="btn btn-outline-secondary" href="?customerId={{this.id}}" role="button">{{this.name}}</a>
+        <a class="btn btn-outline-secondary {{#ifCond this.id ../customerId}}active{{/ifCond}}" href="?customerId={{this.id}}" role="button">{{this.name}}</a>
         {{/each}}
       </div>
 
@@ -24,10 +24,13 @@
       </div>
       {{#each partNumbers}}
       <div class="m-auto text-white border border-white d-flex justify-content-between align-items-center" style="max-width: 90%;">
-        <p class="m-0"><span class="text-warning" style="cursor: pointer;">-</span> {{this.name}}</p>
-        <form action="/manager/partnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('會連同子部品一起刪除，確認刪除嗎?')">
-          <button type="submit" class="btn btn-outline-danger btn-sm">刪除</button>
-        </form>
+        <p class="m-0"><span class="text-warning" style="cursor: pointer;">-</span> {{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
+        <div class="d-flex flex-row my-1">
+          <a class="btn btn-outline-warning btn-sm" href='/manager/partnumbers/{{this.id}}/edit'>變更資料</a>
+          <form action="/manager/partnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('會連同子部品一起刪除，確認刪除嗎?')">
+            <button type="submit" class="btn btn-outline-danger btn-sm mx-1">刪除</button>
+          </form>
+        </div>
       </div>
 
       {{#if this.subPartNumbers}}
@@ -37,11 +40,14 @@
             <h6 class="m-0">子部品</h6>
           </div>
           {{#each this.subPartNumbers}}
-          <div class="pl-5 border border-white d-flex justify-content-between align-items-center">
+          <div class="pl-5 border border-white d-flex justify-content-between align-items-center bg-dark">
             <p class="m-0 text-info">{{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
-            <form action="/manager/subpartnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
-              <button type="submit" class="btn btn-outline-danger btn-sm">刪除</button>
-            </form>
+            <div class="d-flex flex-row my-1">
+              <a class="btn btn-outline-warning btn-sm" href='/manager/subpartnumbers/{{this.id}}/edit'>變更資料</a>
+              <form action="/manager/subpartnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
+                <button type="submit" class="btn btn-outline-danger btn-sm mx-1">刪除</button>
+              </form>
+            </div>
           </div>
           {{/each}}
         </div>

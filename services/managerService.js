@@ -101,7 +101,7 @@ const managerService = {
               return SubPartNumber.create({
                 name: req.body.name,
                 commonName: req.body.commonName,
-                quantity: 0,
+                quantity: Number(req.body.quantity),
                 partNumberId: req.body.affiliatedPartNumber,
                 customerId: req.body.customer
               })
@@ -113,7 +113,7 @@ const managerService = {
               return PartNumber.create({
                 name: req.body.name,
                 commonName: req.body.commonName,
-                quantity: 0,
+                quantity: Number(req.body.quantity),
                 customerId: req.body.customer
               })
                 .then((partNumber => {
@@ -128,7 +128,6 @@ const managerService = {
 
   // 取得所有部品資料
   getParNumbers: (req, res, callback) => {
-    console.log(req.query)
     if (!req.query.customerId) {
       return PartNumber.findAll({
         include: [SubPartNumber]
@@ -159,7 +158,7 @@ const managerService = {
             raw: true,
             nest: true
           }).then((customers) => {
-            callback({ partNumbers: partNumbers, customers: customers })
+            callback({ partNumbers: partNumbers, customers: customers, customerId: Number(req.query.customerId) })
           })
         })
     }
@@ -195,18 +194,141 @@ const managerService = {
             })
               .then((subPartNumbers) => {
                 // 刪除子部品
-                return subPartNumbers.forEach(element => {
-                  SubPartNumber.findByPk(element.id)
-                    .then((subPartNumber) => {
-                      subPartNumber.destroy()
-                        .then(() => {
-                          callback({ status: 'success', message: `部品${partNumber.name}連同子部品已成功摻除` })
-                        })
-                    })
-                })
+                if (subPartNumbers.length) {
+                  return subPartNumbers.forEach(element => {
+                    SubPartNumber.findByPk(element.id)
+                      .then((subPartNumber) => {
+                        subPartNumber.destroy()
+                          .then(() => {
+                            callback({ status: 'success', message: `部品${partNumber.name}連同子部品已成功摻除` })
+                          })
+                      })
+                  })
+                } else {
+                  return callback({ status: 'success', message: `部品${partNumber.name}連同子部品已成功摻除` })
+                }
               })
           })
       })
+  },
+
+  // 取得一般部品資料渲染編輯頁
+  getPartNumber: (req, res, callback) => {
+    return PartNumber.findByPk(req.params.id)
+      .then((partNumber) => {
+        return PartNumber.findAll({
+          raw: true,
+          nest: true
+        })
+          .then((partNumbers) => {
+            return Customer.findAll({
+              raw: true,
+              nest: true
+            })
+              .then((customers) => {
+                callback({ partNumber: partNumber.toJSON(), partNumbers: partNumbers, customers: customers })
+              })
+          })
+      })
+  },
+
+  // 取得子部品資料渲染編輯頁
+  getSubPartNumber: (req, res, callback) => {
+    return SubPartNumber.findByPk(req.params.id)
+      .then((subPartNumber) => {
+        return PartNumber.findAll({
+          raw: true,
+          nest: true
+        })
+          .then((partNumbers) => {
+            return Customer.findAll({
+              raw: true,
+              nest: true
+            })
+              .then((customers) => {
+                callback({ subPartNumber: subPartNumber.toJSON(), partNumbers: partNumbers, customers: customers })
+              })
+          })
+      })
+  },
+
+  // 變更一般部品資料
+  putPartNumber: (req, res, callback) => {
+    if (Number(req.body.affiliatedPartNumber)) {
+      // 狀況一、變成子部品(變更性質)
+      //  1.檢查是否擁有子部品
+      return SubPartNumber.findAll({ where: { partNumberId: req.params.id } }).then((subPartNumbers => {
+        if (subPartNumbers.length) {
+          callback({ status: 'error', message: `此部品擁有子部品，在尚未清除所擁有之子部品前無法使用此操作!!` })
+        } else {
+          //   2.找出一般部品資料findByPk
+          return PartNumber.findByPk(req.params.id)
+            .then((partNumber) => {
+              partNumber.destroy() //   3.刪除一般部品資料
+                .then(() => {
+                  SubPartNumber.create({ //   4.新建子部品資料
+                    name: req.body.name,
+                    commonName: req.body.commonName,
+                    quantity: Number(req.body.quantity),
+                    partNumberId: req.body.affiliatedPartNumber,
+                    customerId: req.body.customer
+                  })
+                    .then((subPartNumber) => {
+                      callback({ status: 'success', message: `部品番${subPartNumber.name}成功轉移至子部品番` }) //   5.回傳結果
+                    })
+                })
+            })
+        }
+      }))
+    } else {
+      // 狀況二、單純變更資料(變更內容)
+      //   1.找出資料findByPk 
+      return PartNumber.findByPk(req.params.id).then((partNumber) => {
+        partNumber.update({ //   2.更新資料庫
+          name: req.body.name,
+          commonName: req.body.commonName,
+          quantity: Number(req.body.quantity),
+          customerId: req.body.customer
+        })
+          .then((partNumber) => {
+            callback({ status: 'success', message: `部品番${partNumber.name}更新資料成功` }) //   3.回傳結果
+          })
+      })
+    }
+  },
+
+  // 變更子部品資料
+  putSubPartNumber: (req, res, callback) => {
+    if (!Number(req.body.affiliatedPartNumber)) {
+      // 狀況一、變成一般部品(變更性質)
+      // 1.找出子部品資料findByPk
+      return SubPartNumber.findByPk(req.params.id).then((subPartNumber) => {
+        subPartNumber.destroy().then(() => {  // 3.刪除子部品
+          PartNumber.create({  // 4.新增一般部品
+            name: req.body.name,
+            commonName: req.body.commonName,
+            quantity: Number(req.body.quantity),
+            customerId: req.body.customer
+          })
+            .then((partNumber) => { callback({ status: 'success', message: `子部品番${partNumber.name}成功轉移至一般部品` }) })  // 5.回傳結果
+
+        })
+      })
+    } else {
+      // 狀況二、單純變更資料(變更內容)
+      // 1.找出子部品資料findByPk
+      return SubPartNumber.findByPk(req.params.id).then((subPartNumber) => {
+        subPartNumber.update({  // 2.更新資料
+          name: req.body.name,
+          commonName: req.body.commonName,
+          quantity: Number(req.body.quantity),
+          partNumberId: req.body.affiliatedPartNumber,
+          customerId: req.body.customer
+        })
+          .then((subPartNumber) => { callback({ status: 'srccess', message: `子部品番${partNumber.name}更新資料成功` }) })
+        // 3.回傳結果
+      })
+    }
   }
 }
 

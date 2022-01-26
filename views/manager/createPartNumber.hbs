@@ -1,49 +1,65 @@
 <div class="container mt-5">
-  <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/partnumber/create" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
-    <div class="text-center mb-4">
-      <h3 class="mb-3 font-weight-normal text-white">新增部品</h3>
-    </div>
-    <div class="text-center">
-      {{#if error_messages}}
-      <div class="alert alert-danger" role="alert" style="margin: 5px 0 ;">{{error_messages}}</div>
-      {{/if}}
-    </div>
-    <div class="form-label-group text-white">
-      <label for="inputName">発注人<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
-      <select class="custom-select" name="customer" id="affiliatedPartNumber" required>
-        <option selected></option>
-        {{#each customers}}
-        <option value="{{this.id}}">{{this.name}}</option>
-        {{/each}}
-      </select>
-    </div>
-    <div class="form-label-group text-white mt-4">
-      <label for="inputPassword">部品番號<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
-      <input type="text" name="name" class="form-control" placeholder="" value="" required>
-    </div>
-    <div class="form-label-group text-white mt-4">
-      <label for="inputPassword">母部品<span class="text-danger" style="font-size: 10px;"> (無-請空白)</span></label>
-      <select class="custom-select" name="affiliatedPartNumber" id="affiliatedPartNumber">
-        <option selected value="0"></option>
-        {{#each partNumbers}}
-        <option value="{{this.id}}">{{this.name}}</option>
-        {{/each}}
-      </select>
-    </div>
-    <div class="form-label-group text-white mt-4">
-      <label for="inputPassword">通稱</label>
-      <input type="text" name="commonName" class="form-control" placeholder="" value="">
-    </div>
-    {{!-- <div class="form-label-group text-white mt-4">
-      <label for="inputPassword">價格</label>
-      <input type="text" name="fax" class="form-control" placeholder="" value="">
-    </div>
-    <div class="form-label-group text-white mt-4">
-      <label for="inputPassword">圖片</label>
-      <input type="text" name="fax" class="form-control" placeholder="" value="">
-    </div> --}}
-    <br />
-    <button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
-  </form>
+  {{#if partNumber}}
+  <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/partnumbers/{{partNumber.id}}?_method=PUT" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
+    {{else if subPartNumber}}
+    <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/subpartnumbers/{{subPartNumber.id}}?_method=PUT" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
+      {{else}}
+      <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/partnumber/create" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
+        {{/if}}
+        <div class="text-center mb-4">
+          {{#if partNumber}}
+          <h3 class="mb-3 font-weight-normal text-white">變更部品({{partNumber.name}})資料</h3>
+          {{else if subPartNumber}}
+          <h3 class="mb-3 font-weight-normal text-white">變更子部品({{subPartNumber.name}})資料</h3>
+          {{else}}
+          <h3 class="mb-3 font-weight-normal text-white">新增部品</h3>
+          {{/if}}
+        </div>
+        <div class="text-center">
+          {{#if error_messages}}
+          <div class="alert alert-danger" role="alert" style="margin: 5px 0 ;">{{error_messages}}</div>
+          {{/if}}
+        </div>
+        <div class="form-label-group text-white">
+          <label for="inputName">発注人<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
+          <select class="custom-select" name="customer" id="affiliatedPartNumber" required>
+            <option value="0"></option>
+            {{#each customers}}
+            <option value="{{this.id}}" {{#ifCond this.id ../partNumber.CustomerId}} selected {{/ifCond}} {{#ifCond this.id ../subPartNumber.CustomerId}} selected {{/ifCond}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-label-group text-white mt-4">
+          <label for="inputPassword">部品番號<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
+          <input type="text" name="name" class="form-control" placeholder="" {{#if partNumber.name}} value="{{partNumber.name}}" {{else if subPartNumber.name}} value="{{subPartNumber.name}}" {{/if}}required>
+        </div>
+        <div class="form-label-group text-white mt-4">
+          <label for="inputPassword">母部品<span class="text-danger" style="font-size: 10px;"> (無-請空白)</span></label>
+          <select class="custom-select" name="affiliatedPartNumber" id="affiliatedPartNumber">
+            <option value="0"></option>
+            {{#each partNumbers}}
+            <option value="{{this.id}}" {{#ifCond this.id ../partNumber.id}} style="display: none;" {{/ifCond}} {{#ifCond this.id ../subPartNumber.PartNumberId}} selected {{/ifCond}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-label-group text-white mt-4">
+          <label for="inputPassword">數量</label>
+          <input type="number" name="quantity" class="form-control" placeholder="" {{#if subPartNumber.quantity}} value="{{subPartNumber.quantity}}" {{else if partNumber.quantity}} value="{{partNumber.quantity}}" {{else}} value="0" {{/if}}>
+        </div>
+        <div class="form-label-group text-white mt-4">
+          <label for="inputPassword">通稱</label>
+          <input type="text" name="commonName" class="form-control" placeholder="" {{#if subPartNumber.commonName}} value="{{subPartNumber.commonName}}" {{else if partNumber.commonName}} value="{{partNumber.commonName}}" {{/if}}>
+        </div>
+        {{!-- <div class="form-label-group text-white mt-4">
+          <label for="inputPassword">價格</label>
+          <input type="text" name="fax" class="form-control" placeholder="" value="">
+        </div>
+        <div class="form-label-group text-white mt-4">
+          <label for="inputPassword">圖片</label>
+          <input type="text" name="fax" class="form-control" placeholder="" value="">
+        </div> --}}
+        <br />
+        <button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+      </form>
 
 </div>
