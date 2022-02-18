@@ -4,6 +4,7 @@ const adminContorller = require('../controllers/adminController.js')
 const managerController = require('../controllers/managerController.js')
 const userContorller = require('../controllers/userController.js')
 const inventoryController = require('../controllers/inventoryController.js')
+const warehouseController = require('../controllers/warehouseController.js')
 const passport = require('passport')
 const partNoController = require('../controllers/partNoController.js')
 
@@ -71,7 +72,11 @@ router.get('/manager/partnumbers/:id/edit', authenticateManager, managerControll
 router.get('/manager/subpartnumbers/:id/edit', authenticateManager, managerController.getSubPartNumber) //瀏覽變更子部品資料頁
 ////
 
-// router.get('/warehouse', authenticated, (req, res) => { res.redirect('/warehouse/all/partnumber') }) //瀏覽在庫查詢頁面
+router.get('/warehouse', authenticated, (req, res) => { res.redirect('/warehouse/partnumbers') }) //瀏覽在庫查詢頁面
+router.get('/warehouse/partnumbers', authenticated, warehouseController.getParNumbers)
+router.get('/warehouse/warehousing', authenticated, warehouseController.getWarehousing) //瀏覽部品入庫頁面
+router.get('/warehouse/shipping', authenticated, warehouseController.getShipping) //瀏覽部品出貨頁面
+
 
 router.get('/Warehousing', (req, res) => { res.render('Warehousing') }) //瀏覽入庫頁面
 

@@ -1,10 +1,10 @@
 <div class="container mt-5">
   {{#if partNumber}}
-  <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/partnumbers/{{partNumber.id}}?_method=PUT" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
+  <form class="border border-secondary rounded p-4 m-auto" action="/manager/partnumbers/{{partNumber.id}}?_method=PUT" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
     {{else if subPartNumber}}
-    <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/subpartnumbers/{{subPartNumber.id}}?_method=PUT" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
+    <form class="border border-secondary rounded p-4 m-auto" action="/manager/subpartnumbers/{{subPartNumber.id}}?_method=PUT" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
       {{else}}
-      <form class="form-signin border border-secondary rounded p-4 m-auto" action="/manager/partnumber/create" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
+      <form class="border border-secondary rounded p-4 m-auto" action="/manager/partnumber/create" method="POST" style="width: 50%; background-color: rgb(26, 21, 48);">
         {{/if}}
         <div class="text-center mb-4">
           {{#if partNumber}}
@@ -21,7 +21,7 @@
           {{/if}}
         </div>
         <div class="form-label-group text-white">
-          <label for="inputName">発注人<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
+          <label for="inputCustomer">発注人<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
           <select class="custom-select" name="customer" id="affiliatedPartNumber" required>
             <option value="0"></option>
             {{#each customers}}
@@ -30,11 +30,11 @@
           </select>
         </div>
         <div class="form-label-group text-white mt-4">
-          <label for="inputPassword">部品番號<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
+          <label for="inputName">部品番號<span class="text-danger" style="font-size: 10px;"> (必填)</span></label>
           <input type="text" name="name" class="form-control" placeholder="" {{#if partNumber.name}} value="{{partNumber.name}}" {{else if subPartNumber.name}} value="{{subPartNumber.name}}" {{/if}}required>
         </div>
         <div class="form-label-group text-white mt-4">
-          <label for="inputPassword">母部品<span class="text-danger" style="font-size: 10px;"> (無-請空白)</span></label>
+          <label for="inputAffiliatedPartNumber">母部品<span class="text-danger" style="font-size: 10px;"> (無-請空白)</span></label>
           <select class="custom-select" name="affiliatedPartNumber" id="affiliatedPartNumber">
             <option value="0"></option>
             {{#each partNumbers}}
@@ -43,11 +43,11 @@
           </select>
         </div>
         <div class="form-label-group text-white mt-4">
-          <label for="inputPassword">數量</label>
-          <input type="number" name="quantity" class="form-control" placeholder="" {{#if subPartNumber.quantity}} value="{{subPartNumber.quantity}}" {{else if partNumber.quantity}} value="{{partNumber.quantity}}" {{else}} value="0" {{/if}}>
+          <label for="inputQuantity">數量</label>
+          <input type="number" name="quantity" class="form-control" placeholder="" min=0 {{#if subPartNumber.quantity}} value="{{subPartNumber.quantity}}" {{else if partNumber.quantity}} value="{{partNumber.quantity}}" {{else}} value=0 {{/if}}>
         </div>
         <div class="form-label-group text-white mt-4">
-          <label for="inputPassword">通稱</label>
+          <label for="inputCommonName">通稱</label>
           <input type="text" name="commonName" class="form-control" placeholder="" {{#if subPartNumber.commonName}} value="{{subPartNumber.commonName}}" {{else if partNumber.commonName}} value="{{partNumber.commonName}}" {{/if}}>
         </div>
         {{!-- <div class="form-label-group text-white mt-4">

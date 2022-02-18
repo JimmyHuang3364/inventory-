@@ -70,7 +70,7 @@ const managerController = {
 
   getParNumbers: (req, res) => {
     managerService.getParNumbers(req, res, (data) => {
-      return res.render('partnumbers', data)
+      return res.render('manager/partnumbers', data)
     })
   },
 

@@ -1,64 +1,53 @@
-<div class="container-fluid p-0">
+<div class="container">
 
-  <div class="d-flex flex-row">
-
-    <div class="nav flex-column nav-pills" style="flex-basis: 10%; height:100%; text-align: center; background-color:rgb(49, 39, 92)">
-      <div class="nav flex-column mx-2">
-        <a class="btn btn-info mb-2" href="/Warehousing" role="button">入庫</a>
-        <a class="btn btn-success" href="/Shipment" role="button">出貨</a>
+  <div class="mt-3">
+    <div class="d-flex flex-row justify-content-between align-items-center">
+      <div class="mb-2">
+        <a class="btn btn-outline-secondary {{#if customerId}}{{else}}active{{/if}}" href="/warehouse/partnumber" role="button">全部 {{CustomerId}}</a>
+        {{#each customers}}
+        <a class="btn btn-outline-secondary {{#ifCond this.id ../customerId}}active{{/ifCond}}" href="?customerId={{this.id}}" role="button">{{this.name}}</a>
+        {{/each}}
       </div>
 
-      <div class="mx-2">
-        <h4 class="mt-4 text-white">発注人</h4>
-        <a class="nav-link text-white active" href="/warehouse/all/partnumber">全部</a>
-        {{#each customers}}
-        <a class="nav-link text-white" href="/warehouse/{{this.name}}/partnumber">{{this.name}}</a>
-        {{/each}}
+      <div class="mb-2">
+        <a class="btn btn-warning mr-2" href="/warehouse/warehousing" role="button">新增入庫</a>
+        <a class="btn btn-success" href="/warehouse/shipping" role="button">新增出貨</a>
       </div>
     </div>
 
-    <div class="mt-5" style="flex-grow: 1;">
-      <div class="mb-3">
-        {{#if success_messages}}
-        <div class="alert alert-success mx-5 mb-3" role="alert" style="margin: 5px 0 ; text-align: center;">{{success_messages}}</div>
-        {{/if}}
+    <div>
+      {{#if success_messages}}
+      <div class="alert alert-success mx-5 mb-3" role="alert" style="margin: 5px 0 ; text-align: center;">{{success_messages}}</div>
+      {{/if}}
 
-        <div class="m-auto text-white border border-white bg-primary rounded-top d-flex justify-content-between p-1" style="max-width: 90%;">
-          <h4 class="m-0">部品</h4>
-          <h4 class="m-0">在庫數</h4>
-        </div>
-        {{#each partNumbers}}
-        <div class="m-auto text-white border border-white d-flex justify-content-between p-1" style="max-width: 90%;">
-          <p class="m-0"><span class="text-warning" style="cursor: pointer;">-</span> {{this.name}}</p>
-          <p class="m-0">{{this.quantity}}</p>
-        </div>
-
-        {{#if this.subPartNumbers}}
-        <div>
-          <div class="m-auto text-white border border-white" style="max-width: 90%;">
-            <div class="pl-5 border border-white d-flex justify-content-between bg-info">
-              <h6 class="m-0">子部品</h6>
-              <h6 class="m-0">在庫數</h6>
-            </div>
-            {{#each this.subPartNumbers}}
-            <div class="pl-5 border border-white d-flex justify-content-between">
-              <p class="m-0">{{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
-              <p class="m-0">{{this.quantity}}</p>
-            </div>
-            {{/each}}
-          </div>
-        </div>
-        {{/if}}
-        {{/each}}
-
-
-        {{!-- <div class="m-auto text-white border border-white d-flex justify-content-between p-1" style="max-width: 90%;">
-          <p class="m-0"><span class="text-warning" style="cursor: pointer;">-</span> xc545645645</p>
-          <p class="m-0">315</p>
-        </div> --}}
-
+      <div class="m-auto text-white border border-white bg-primary rounded-top d-flex justify-content-between p-1" style="max-width: 90%;">
+        <h4 class="m-0">部品</h4>
       </div>
+      {{#each partNumbers}}
+      <div class="m-auto text-white border border-white d-flex justify-content-between align-items-center" style="max-width: 90%;">
+        <p class="m-0"><span class="text-warning" style="cursor: pointer;">&ensp;-</span> {{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
+        <p class="m-0">在庫數 : {{this.quantity}}</p>
+      </div>
+
+      {{#if this.subPartNumbers}}
+      <div>
+        <div class="m-auto text-white border border-white" style="max-width: 90%;">
+          <div class="pl-5 border border-white d-flex justify-content-between bg-info">
+            <h6 class="m-0"><span class="text-dark">{{this.name}}-</span>子部品</h6>
+          </div>
+          {{#each this.subPartNumbers}}
+          <div class="pl-5 border border-white d-flex justify-content-between align-items-center bg-dark">
+            <p class="m-0 text-info">{{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
+            <p class="m-0">在庫數 : {{this.quantity}}</p>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+      {{/each}}
 
     </div>
 
   </div>
+
+</div>
