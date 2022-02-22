@@ -75,7 +75,9 @@ router.get('/manager/subpartnumbers/:id/edit', authenticateManager, managerContr
 router.get('/warehouse', authenticated, (req, res) => { res.redirect('/warehouse/partnumbers') }) //瀏覽在庫查詢頁面
 router.get('/warehouse/partnumbers', authenticated, warehouseController.getParNumbers)
 router.get('/warehouse/warehousing', authenticated, warehouseController.getWarehousing) //瀏覽部品入庫頁面
+router.post('/warehouse/warehousing', authenticated, warehouseController.postWarehousing) //送出部品入庫
 router.get('/warehouse/shipping', authenticated, warehouseController.getShipping) //瀏覽部品出貨頁面
+
 
 
 router.get('/Warehousing', (req, res) => { res.render('Warehousing') }) //瀏覽入庫頁面

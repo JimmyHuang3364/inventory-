@@ -2,6 +2,11 @@
   <form class="border border-secondary rounded p-4 m-auto" action="/warehouse/warehousing" method="post" style="width: 50%; background-color: rgb(26, 21, 48);">
     <div class="text-center mb-4">
       <h2 class="mb-3 font-weight-normal text-white">部品入庫</h2>
+      {{#if error_messages}}
+      <div class="alert alert-danger" role="alert" style="margin: 5px 0 ;">
+        {{error_messages}}
+      </div>
+      {{/if}}
     </div>
     <div class="form-group text-white">
       <label for="partNum">部品番號</label>
