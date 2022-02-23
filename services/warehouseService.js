@@ -63,6 +63,36 @@ const warehouseService = {
             })
         }
       })
+  },
+
+  postShipping: (req, res, callback) => {
+    PartNumber.findOne({ where: { name: req.body.partNum } })
+      .then((partNumber) => {
+        if (partNumber) { // 有此母部品
+          if (Number(partNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: '在庫數不足﹐請確認數量!!' }) } //在庫數不足出貨
+
+          if (Number(partNumber.quantity) >= Number(req.body.quantity)) {
+            return partNumber.update({ quantity: Number(partNumber.quantity) - Number(req.body.quantity) }) // 更新母部品在庫數
+              .then((partNumber) => { return callback({ status: 'success', message: `${partNumber.name}出貨${req.body.quantity}，剩餘在庫數: ${partNumber.quantity}` }) })
+          }
+        }
+
+        if (!partNumber) { // 無此母部品
+          SubPartNumber.findOne({ where: { name: req.body.partNum } }) //搜尋子部品
+            .then((subPartNumber) => {
+              if (subPartNumber) { // 有此子部品
+                if (Number(subPartNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: '在庫數不足﹐請確認數量!!' }) } //在庫數不足出貨
+
+                if (Number(subPartNumber.quantity) >= Number(req.body.quantity)) {
+                  subPartNumber.update({ quantity: Number(subPartNumber.quantity) - Number(req.body.quantity) }) // 更新子部品在庫數
+                    .then((subPartNumber) => { return callback({ status: 'success', message: `${subPartNumber.name}已減少${req.body.quantity}，在庫數: ${subPartNumber.quantity}` }) })
+                }
+              }
+
+              if (!subPartNumber) { return callback({ status: 'error', message: '找無此部品番號' }) } //全部找不到
+            })
+        }
+      })
   }
 }
 

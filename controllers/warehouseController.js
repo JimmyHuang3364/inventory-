@@ -28,6 +28,20 @@ const warehouseController = {
         return res.redirect('back')
       }
     })
+  },
+
+  postShipping: (req, res) => {
+    warehouseService.postShipping(req, res, (data) => {
+      if (data['status'] === 'success') {
+        req.flash('success_messages', data['message'])
+        return res.redirect('/warehouse/partnumbers')
+      }
+
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      }
+    })
   }
 }
 
