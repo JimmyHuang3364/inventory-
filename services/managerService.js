@@ -102,6 +102,7 @@ const managerService = {
                 name: req.body.name,
                 commonName: req.body.commonName,
                 quantity: Number(req.body.quantity),
+                safetyStockQuantity: Number(req.body.safetyStockQuantity),
                 partNumberId: req.body.affiliatedPartNumber,
                 customerId: req.body.customer
               })
@@ -114,6 +115,7 @@ const managerService = {
                 name: req.body.name,
                 commonName: req.body.commonName,
                 quantity: Number(req.body.quantity),
+                safetyStockQuantity: Number(req.body.safetyStockQuantity),
                 customerId: req.body.customer
               })
                 .then((partNumber => {
@@ -270,6 +272,7 @@ const managerService = {
                     name: req.body.name,
                     commonName: req.body.commonName,
                     quantity: Number(req.body.quantity),
+                    safetyStockQuantity: Number(req.body.safetyStockQuantity),
                     partNumberId: req.body.affiliatedPartNumber,
                     customerId: req.body.customer
                   })
@@ -288,6 +291,7 @@ const managerService = {
           name: req.body.name,
           commonName: req.body.commonName,
           quantity: Number(req.body.quantity),
+          safetyStockQuantity: Number(req.body.safetyStockQuantity),
           customerId: req.body.customer
         })
           .then((partNumber) => {
@@ -308,6 +312,7 @@ const managerService = {
             name: req.body.name,
             commonName: req.body.commonName,
             quantity: Number(req.body.quantity),
+            safetyStockQuantity: Number(req.body.safetyStockQuantity),
             customerId: req.body.customer
           })
             .then((partNumber) => { callback({ status: 'success', message: `子部品番${partNumber.name}成功轉移至一般部品` }) })  // 5.回傳結果
@@ -322,6 +327,7 @@ const managerService = {
           name: req.body.name,
           commonName: req.body.commonName,
           quantity: Number(req.body.quantity),
+          safetyStockQuantity: Number(req.body.safetyStockQuantity),
           partNumberId: req.body.affiliatedPartNumber,
           customerId: req.body.customer
         })
