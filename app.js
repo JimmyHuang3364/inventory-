@@ -27,6 +27,8 @@ app.use((req, res, next) => {
 
 app.use(methodOverride('_method'))
 
+app.use(express.static('public'))
+
 app.listen(port, () => {
   console.log('server is running!!')
 })
