@@ -26,7 +26,8 @@
       {{#each partNumbers}}
       <div class="m-auto text-white border border-white d-flex justify-content-between align-items-center" style="max-width: 90%;">
         <p class="m-0"><span class="text-warning" style="cursor: pointer;">&ensp;-</span> {{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
-        <p class="m-0">在庫數 : {{this.quantity}}</p>
+        {{#ifCheckSafety this.quantity this.safetyStockQuantity}} <p class="m-0  text-danger">注意！！低於安全庫存！！</p> {{/ifCheckSafety}}
+        <p class="m-0 {{#ifCheckSafety this.quantity this.safetyStockQuantity}} text-danger {{/ifCheckSafety}}">在庫數 : {{this.quantity}}&nbsp</p>
       </div>
 
       {{#if this.subPartNumbers}}
@@ -38,7 +39,8 @@
           {{#each this.subPartNumbers}}
           <div class="pl-5 border border-white d-flex justify-content-between align-items-center bg-dark">
             <p class="m-0 text-info">{{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
-            <p class="m-0">在庫數 : {{this.quantity}}</p>
+            {{#ifCheckSafety this.quantity this.safetyStockQuantity}} <p class="m-0  text-danger">注意！！低於安全庫存！！</p> {{/ifCheckSafety}}
+            <p class="m-0 {{#ifCheckSafety this.quantity this.safetyStockQuantity}} text-danger {{/ifCheckSafety}}">在庫數 : {{this.quantity}}&nbsp</p>
           </div>
           {{/each}}
         </div>
