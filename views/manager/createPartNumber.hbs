@@ -47,6 +47,10 @@
           <input type="number" name="quantity" class="form-control" placeholder="" min=0 {{#if subPartNumber.quantity}} value="{{subPartNumber.quantity}}" {{else if partNumber.quantity}} value="{{partNumber.quantity}}" {{else}} value=0 {{/if}}>
         </div>
         <div class="form-label-group text-white mt-4">
+          <label for="inputSafetyStockQuantity">安全庫存設定</label>
+          <input type="number" name="safetyStockQuantity" class="form-control" placeholder="" min=0 {{#if subPartNumber.safetyStockQuantity}} value="{{subPartNumber.safetyStockQuantity}}" {{else if partNumber.safetyStockQuantity}} value="{{partNumber.safetyStockQuantity}}" {{else}} value=0 {{/if}}>
+        </div>
+        <div class="form-label-group text-white mt-4">
           <label for="inputCommonName">通稱</label>
           <input type="text" name="commonName" class="form-control" placeholder="" {{#if subPartNumber.commonName}} value="{{subPartNumber.commonName}}" {{else if partNumber.commonName}} value="{{partNumber.commonName}}" {{/if}}>
         </div>

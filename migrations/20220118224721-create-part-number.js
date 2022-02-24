@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      safetyStock: {
+      safetyStockQuantity: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
