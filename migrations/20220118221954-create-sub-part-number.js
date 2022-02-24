@@ -19,6 +19,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
+      safetyStock: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       partNumberId: {
         allowNull: false,
         type: Sequelize.INTEGER
