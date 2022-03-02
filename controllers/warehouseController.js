@@ -9,7 +9,7 @@ const warehouseController = {
   },
 
   getWarehousing: (req, res) => {
-    return res.render('warehousing')
+    return res.render('Warehousing')
   },
 
   getShipping: (req, res) => {
