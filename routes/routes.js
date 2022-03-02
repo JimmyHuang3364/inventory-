@@ -79,10 +79,4 @@ router.post('/warehouse/warehousing', authenticated, warehouseController.postWar
 router.get('/warehouse/shipping', authenticated, warehouseController.getShipping) //瀏覽部品出貨頁面
 router.post('/warehouse/shipping', authenticated, warehouseController.postShipping) //瀏覽部品出貨頁面
 
-
-
-router.get('/Warehousing', (req, res) => { res.render('Warehousing') }) //瀏覽入庫頁面
-
-router.get('/Shipment', (req, res) => { res.render('Shipment') }) //瀏覽出貨頁面
-
 module.exports = router
