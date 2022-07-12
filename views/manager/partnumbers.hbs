@@ -19,7 +19,7 @@
       <div class="alert alert-success mx-5 mb-3" role="alert" style="margin: 5px 0 ; text-align: center;">{{success_messages}}</div>
       {{/if}}
 
-      <div class="m-auto text-white border border-white bg-primary rounded-top d-flex justify-content-between p-1" style="max-width: 90%;">
+      {{!-- <div class="m-auto text-white border border-white bg-primary rounded-top d-flex justify-content-between p-1" style="max-width: 90%;">
         <h4 class="m-0">部品</h4>
       </div>
       {{#each partNumbers}}
@@ -53,8 +53,51 @@
         </div>
       </div>
       {{/if}}
-      {{/each}}
+      {{/each}} --}}
 
+      <table class="table table-hover table-bordered table-dark">
+        <thead>
+          <tr class="table-active" style="text-align: center;">
+            <th scope="col">品番</th>
+            <th scope="col">在庫數量</th>
+            <th scope="col">備註</th>
+            <th scope="col">安全庫存</th>
+            <th scope="col">操作</th>
+          </tr>
+        </thead>
+        {{#each partNumbers}}
+        <tbody>
+          <tr style="text-align: center;">
+            <th scope="row">{{this.name}}</th> {{!--品番--}}
+            <td class="{{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
+            <td>{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
+            <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
+            <td class="d-flex justify-content-around">
+              <a class="btn btn-outline-warning btn-sm" href='/manager/subpartnumbers/{{this.id}}/edit'>變更資料</a>
+              <form action="/manager/subpartnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
+                <button type="submit" class="btn btn-outline-danger btn-sm mx-1">刪除</button>
+              </form>
+            </td>
+          </tr>
+          {{#if this.subPartNumbers}}
+          {{#each this.subPartNumbers}}
+          <tr style="text-align: center;">
+            <th scope="row">{{this.name}}</th> {{!--品番--}}
+            <td class="{{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
+            <td>{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
+            <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
+            <td class="d-flex justify-content-around">
+              <a class="btn btn-outline-warning btn-sm" href='/manager/subpartnumbers/{{this.id}}/edit'>變更資料</a>
+              <form action="/manager/subpartnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
+                <button type="submit" class="btn btn-outline-danger btn-sm mx-1">刪除</button>
+              </form>
+            </td>
+          </tr>
+          {{/each}}
+          {{/if}}
+        </tbody>
+        {{/each}}
+      </table>
     </div>
 
   </div>

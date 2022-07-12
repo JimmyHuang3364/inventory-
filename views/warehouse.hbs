@@ -19,37 +19,36 @@
       {{#if success_messages}}
       <div class="alert alert-success mx-5 mb-3" role="alert" style="margin: 5px 0 ; text-align: center;">{{success_messages}}</div>
       {{/if}}
-
-      <div class="m-auto text-white border border-white bg-primary rounded-top d-flex justify-content-between p-1" style="max-width: 90%;">
-        <h4 class="m-0">部品</h4>
-      </div>
-      {{#each partNumbers}}
-      <div class="m-auto text-white border border-white d-flex justify-content-between align-items-center" style="max-width: 90%;">
-        <p class="m-0"><span class="text-warning" style="cursor: pointer;">&ensp;-</span> {{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
-        {{#ifCheckSafety this.quantity this.safetyStockQuantity}} <p class="m-0  text-danger">注意！！低於安全庫存！！</p> {{/ifCheckSafety}}
-        <p class="m-0 {{#ifCheckSafety this.quantity this.safetyStockQuantity}} text-danger {{/ifCheckSafety}}">在庫數 : {{this.quantity}}&nbsp</p>
-      </div>
-
-      {{#if this.subPartNumbers}}
-      <div>
-        <div class="m-auto text-white border border-white" style="max-width: 90%;">
-          <div class="pl-5 border border-white d-flex justify-content-between bg-info">
-            <h6 class="m-0"><span class="text-dark">{{this.name}}-</span>子部品</h6>
-          </div>
+      <table class="table table-hover table-bordered table-dark">
+        <thead>
+          <tr class="table-active" style="text-align: center;">
+            <th scope="col">品番</th>
+            <th scope="col">在庫數量</th>
+            <th scope="col">備註</th>
+            <th scope="col">安全庫存</th>
+          </tr>
+        </thead>
+        {{#each partNumbers}}
+        <tbody>
+          <tr style="text-align: center;">
+            <th scope="row">{{this.name}}</th> {{!--品番--}}
+            <td class="{{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
+            <td>{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
+            <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
+          </tr>
+          {{#if this.subPartNumbers}}
           {{#each this.subPartNumbers}}
-          <div class="pl-5 border border-white d-flex justify-content-between align-items-center bg-dark">
-            <p class="m-0 text-info">{{this.name}} {{#if this.commonName}} （{{this.commonName}}） {{/if}}</p>
-            {{#ifCheckSafety this.quantity this.safetyStockQuantity}} <p class="m-0  text-danger">注意！！低於安全庫存！！</p> {{/ifCheckSafety}}
-            <p class="m-0 {{#ifCheckSafety this.quantity this.safetyStockQuantity}} text-danger {{/ifCheckSafety}}">在庫數 : {{this.quantity}}&nbsp</p>
-          </div>
+          <tr style="text-align: center;">
+            <th class="py-1" scope="row">{{this.name}}</th> {{!--品番--}}
+            <td class="py-1 {{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
+            <td class="py-1">{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
+            <td class="py-1">{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
+          </tr>
           {{/each}}
-        </div>
-      </div>
-      {{/if}}
-      {{/each}}
-
+          {{/if}}
+        </tbody>
+        {{/each}}
+      </table>
     </div>
-
   </div>
-
 </div>
