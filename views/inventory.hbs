@@ -46,8 +46,8 @@
 
     <div style="flex-grow: 1;">
       <div class="m-auto" style="max-width: 90%;">
-        <h3 class="text-warning">近期動作</h3>
-        <table class="m-auto text-white border border-secondary" style="width: 100%">
+        <h3 class="text-warning">近期紀錄</h3>
+        {{!-- <table class="m-auto text-white border border-secondary" style="width: 100%">
           <tr class="border border-secondary" style="background-color: rgb(0, 15, 146);">
             <th>日期</th>
             <th>発注人</th>
@@ -76,6 +76,41 @@
             <td></td>
             <td>餘數: 0</td>
           </tr> --}}
+        </table> --}}
+        <table class="table bg-white">
+          <thead>
+            <tr class="table-active" style="text-align: center;">
+              <th scope="col">
+                <h4>日期</h4>
+              </th>
+              <th scope="col">
+                <h4>品番</h4>
+              </th>
+              <th scope="col">
+                <h4>入庫</h4>
+              </th>
+              <th scope="col">
+                <h4>出庫</h4>
+              </th>
+              <th scope="col">
+                <h4>餘存</h4>
+              </th>
+              <th scope="col">
+                <h4>備註</h4>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr style="text-align: center;">
+              <th scope="row"></th> {{!--品番--}}
+              <td></td> {{!--在庫數量--}}
+              <td></td> {{!--備註--}}
+              <td></td> {{!--安全庫存--}}
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
