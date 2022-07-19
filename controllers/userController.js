@@ -6,7 +6,7 @@ const userContorller = {
   },
   signIn: (req, res) => {
     req.flash('success_messages', '登入成功')
-    return res.redirect('/inventory')
+    return res.redirect('/warehouse')
   },
   logOut: (req, res) => {
     req.flash('success_messages', '登出成功')
