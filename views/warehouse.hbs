@@ -43,7 +43,7 @@
             <tr style="text-align: center;">
               <th scope="row">{{this.name}}</th> {{!--品番--}}
               <td class="{{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
-              <td>{{#if this.commonName}} 【{{this.commonName}}1231231313】 {{/if}}</td> {{!--備註--}}
+              <td>{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
               <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
             </tr>
             {{#if this.subPartNumbers}}
@@ -64,7 +64,7 @@
       <div class="col-5">
         <div>
           <h5 class="text-light">歷史紀錄</h5>
-          <table class="table table-hover bg-white">
+          <table class="table table-sm table-secondary table-striped table-hover">
             <thead>
               <tr class="table-active" style="text-align: center;">
                 <th scope="col">
@@ -89,16 +89,24 @@
             </thead>
 
             <tbody>
-              {{#each partNumbers}}
+              {{!-- {{#each partNumbers}} --}}
               <tr style="text-align: center;">
-                <th scope="row"></th> {{!--品番--}}
-                <td></td> {{!--在庫數量--}}
-                <td></td> {{!--備註--}}
-                <td></td> {{!--安全庫存--}}
-                <td></td>
-                <td></td>
+                <th scope="row">2022/1/21</th> {{!--日期--}}
+                <td>XC9624051</td> {{!--品番--}}
+                <td>300</td> {{!--入庫--}}
+                <td></td> {{!--出庫--}}
+                <td>600</td> {{!--餘存--}}
+                <td>12321</td> {{!--備註--}}
               </tr>
-              {{/each}}
+              <tr style="text-align: center;">
+                <th scope="row">2022/1/21</th> {{!--品番--}}
+                <td>XC9624051</td> {{!--在庫數量--}}
+                <td></td> {{!--備註--}}
+                <td>300</td> {{!--安全庫存--}}
+                <td>300</td>
+                <td>12321</td>
+              </tr>
+              {{!-- {{/each}} --}}
             </tbody>
           </table>
         </div>

@@ -51,7 +51,7 @@
           <input type="number" name="safetyStockQuantity" class="form-control" placeholder="" min=0 {{#if subPartNumber.safetyStockQuantity}} value="{{subPartNumber.safetyStockQuantity}}" {{else if partNumber.safetyStockQuantity}} value="{{partNumber.safetyStockQuantity}}" {{else}} value=0 {{/if}}>
         </div>
         <div class="form-label-group text-white mt-4">
-          <label for="inputCommonName">通稱</label>
+          <label for="inputCommonName">備註</label>
           <input type="text" name="commonName" class="form-control" placeholder="" {{#if subPartNumber.commonName}} value="{{subPartNumber.commonName}}" {{else if partNumber.commonName}} value="{{partNumber.commonName}}" {{/if}}>
         </div>
         {{!-- <div class="form-label-group text-white mt-4">
@@ -64,6 +64,6 @@
         </div> --}}
         <br />
         <button class="btn btn-lg btn-success btn-block" type="submit">Submit</button>
+        <a class="btn btn-outline-warning btn-lg btn-block mt-3" href='/manager/partnumbers'>返回</a>
       </form>
-
 </div>
