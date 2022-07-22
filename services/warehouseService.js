@@ -2,12 +2,14 @@ const db = require('../models')
 const Customer = db.Customer
 const PartNumber = db.PartNumber
 const SubPartNumber = db.SubPartNumber
+const WarehousingHistory = db.WarehousingHistory
 
 const warehouseService = {
-  getParNumbers: (req, res, callback) => {
+  getParNumbers: (req, res, callback) => {  //取得所有部品資料
     if (!req.query.customerId) {
       return PartNumber.findAll({
-        include: [SubPartNumber]
+        include: [SubPartNumber],
+        order: [['name', 'ASC']]
       })
         .then((result) => {
           const partNumbers = result.map(r => ({
@@ -18,15 +20,25 @@ const warehouseService = {
             raw: true,
             nest: true
           }).then((customers) => {
-            callback({ partNumbers: partNumbers, customers: customers })
+            WarehousingHistory.findAll({
+              raw: true,
+              nest: true,
+              order: [['createdAt', 'DESC']]
+            }).then((warehousingHistory) => {
+              if (warehousingHistory) {
+                for (i = 0; i < warehousingHistory.length; i++) { warehousingHistory[i].createdAt = `${warehousingHistory[i].createdAt.getFullYear()}/${warehousingHistory[i].createdAt.getMonth()}/${warehousingHistory[i].createdAt.getDate()}` }
+              }
+              callback({ partNumbers: partNumbers, customers: customers, warehousingHistory: warehousingHistory })
+            })
           })
         })
     }
 
-    if (req.query.customerId) {
+    if (req.query.customerId) { //取得特一客戶所有部品資料
       return PartNumber.findAll({
         where: { customerId: Number(req.query.customerId) },
-        include: [SubPartNumber]
+        include: [SubPartNumber],
+        order: [['name', 'ASC']]
       })
         .then((result) => {
           const partNumbers = result.map(r => ({
@@ -35,26 +47,51 @@ const warehouseService = {
           }))
           Customer.findAll({
             raw: true,
-            nest: true
+            nest: true,
           }).then((customers) => {
-            callback({ partNumbers: partNumbers, customers: customers, customerId: Number(req.query.customerId) })
+            WarehousingHistory.findAll({
+              where: { customerId: Number(req.query.customerId) },
+              raw: true,
+              nest: true,
+              order: [['createdAt', 'DESC']]
+            }).then((warehousingHistory) => {
+              if (warehousingHistory) {
+                for (i = 0; i < warehousingHistory.length; i++) { warehousingHistory[i].createdAt = `${warehousingHistory[i].createdAt.getFullYear()}/${warehousingHistory[i].createdAt.getMonth()}/${warehousingHistory[i].createdAt.getDate()}` }
+              }
+              callback({ partNumbers: partNumbers, customers: customers, customerId: Number(req.query.customerId), warehousingHistory: warehousingHistory })
+            })
           })
         })
     }
   },
 
+  //入庫
   postWarehousing: (req, res, callback) => {
     return PartNumber.findOne({ where: { name: req.body.partNum } }) // 搜尋有無此母部品
       .then((partNumber) => {
+        console.log(partNumber.customerId)
         if (partNumber) { // 有此母部品
+          WarehousingHistory.create({  //新增出入庫歷史紀錄
+            name: req.body.partNum,
+            quntityOfWarehousing: Number(req.body.quantity),
+            totalQuntity: Number(partNumber.quantity) + Number(req.body.quantity),
+            note: req.body.note,
+            customerId: Number(partNumber.customerId)
+          })
           return partNumber.update({ quantity: Number(partNumber.quantity) + Number(req.body.quantity) }) // 更新母部品在庫數
             .then((partNumber) => { callback({ status: 'success', message: `${partNumber.name}已入庫${req.body.quantity}pcs，在庫數 ${partNumber.quantity}pcs` }) })
         }
-
         if (!partNumber) { //無此部品
           return SubPartNumber.findOne({ where: { name: req.body.partNum } }) //搜尋子部品
             .then((subPartNumber) => {
               if (subPartNumber) { // 有此子部品
+                WarehousingHistory.create({
+                  name: req.body.partNum,
+                  quntityOfWarehousing: Number(req.body.quantity),
+                  totalQuntity: Number(partNumber.quantity) + Number(req.body.quantity),
+                  note: req.body.note,
+                  customerId: Number(partNumber.customerId)
+                })
                 return subPartNumber.update({ quantity: Number(subPartNumber.quantity) + Number(req.body.quantity) }) // 更新子部品在庫數
                   .then((subPartNumber) => { callback({ status: 'success', message: `${subPartNumber.name}已入庫${req.body.quantity}pcs，在庫數 ${subPartNumber.quantity}pcs` }) })
               }
@@ -65,10 +102,18 @@ const warehouseService = {
       })
   },
 
+  //出庫
   postShipping: (req, res, callback) => {
     PartNumber.findOne({ where: { name: req.body.partNum } })
       .then((partNumber) => {
         if (partNumber) { // 有此母部品
+          WarehousingHistory.create({
+            name: req.body.partNum,
+            quntityOfShipping: Number(req.body.quantity),
+            totalQuntity: Number(partNumber.quantity) - Number(req.body.quantity),
+            note: req.body.note,
+            customerId: Number(partNumber.customerId)
+          })
           if (Number(partNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: `在庫數剩餘 ${partNumber.quantity}pcs，不足出貨！！ 請確認數量！！` }) } //在庫數不足出貨
 
           if (Number(partNumber.quantity) >= Number(req.body.quantity)) {
@@ -77,10 +122,17 @@ const warehouseService = {
           }
         }
 
-        if (!partNumber) { // 無此母部品
+        if (!partNumber) { // 無此母部品轉找子部品
           SubPartNumber.findOne({ where: { name: req.body.partNum } }) //搜尋子部品
             .then((subPartNumber) => {
               if (subPartNumber) { // 有此子部品
+                WarehousingHistory.create({
+                  name: req.body.partNum,
+                  quntityOfShipping: Number(req.body.quantity),
+                  totalQuntity: Number(partNumber.quantity) - Number(req.body.quantity),
+                  note: req.body.note,
+                  customerId: Number(partNumber.customerId)
+                })
                 if (Number(subPartNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: `在庫數剩餘 ${subPartNumber.quantity}pcs，不足出貨！！ 請確認數量！！` }) } //在庫數不足出貨
 
                 if (Number(subPartNumber.quantity) >= Number(req.body.quantity)) {
