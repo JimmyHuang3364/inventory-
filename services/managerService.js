@@ -64,9 +64,49 @@ const managerService = {
       .then((customer) => {
         customer.destroy()
           .then(() => {
-            callback({ status: 'success', message: `発注人${customer.name}資料已成功刪除!!` })
+            //找出所有部品
+            return PartNumber.findAll({
+              where: { customerId: customer.id },
+              raw: true,
+              nest: true
+            })
+              .then((partNumbers) => {
+                //一個個刪除部品
+                if (partNumbers.length) {
+                  return partNumbers.forEach(element => {
+                    PartNumber.findByPk(element.id)
+                      .then((partNumber) => {
+                        partNumber.destroy()
+                          .then((partNumber) => {
+                            partNumber = partNumber.toJSON()
+                            // 找出所有該部品之子部品
+                            return SubPartNumber.findAll({
+                              where: { partNumberId: partNumber.id },
+                              raw: true,
+                              nest: true
+                            })
+                              .then((subPartNumbers) => {
+                                // 一個個刪除子部品
+                                if (subPartNumbers.length) {
+                                  return subPartNumbers.forEach(element => {
+                                    SubPartNumber.findByPk(element.id)
+                                      .then((subPartNumber) => {
+                                        subPartNumber.destroy()
+                                          .then(() => { callback({ status: 'success', message: `発注人${customer.name}連同相關資料已成功刪除!!` }) })
+                                      })
+                                  })
+                                }
+
+                                if (subPartNumbers.length) { return callback({ status: 'success', message: `発注人${customer.name}連同相關資料已成功刪除!!` }) }
+                              })
+                          })
+                      })
+                  })
+                }
+              })
           })
       })
+    // 刪除部品的路由'/manager/partnumbers/:id'
   },
 
   // 取得所有客戶及一般部品後渲染新增部品頁
