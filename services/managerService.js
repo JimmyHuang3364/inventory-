@@ -2,6 +2,7 @@ const db = require('../models')
 const Customer = db.Customer
 const PartNumber = db.PartNumber
 const SubPartNumber = db.SubPartNumber
+const WarehousingHistory = db.WarehousingHistory
 
 const managerService = {
   // 取得所有客戶
@@ -375,7 +376,24 @@ const managerService = {
         // 3.回傳結果
       })
     }
+  },
+
+  // 取得所有WarehousingHistories資料
+  getWarehousingHistories: (req, res, callback) => {
+    return WarehousingHistory.findAll({
+      raw: true,
+      nest: true,
+      order: [['createdAt', 'DESC']]
+    }).then((warehousingHistories) => {
+      if (warehousingHistories) {
+        for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+      }
+      callback({ warehousingHistories: warehousingHistories })
+    })
   }
+  // 刪除單一個WarehousingHistory資料
+
+
 }
 
 module.exports = managerService

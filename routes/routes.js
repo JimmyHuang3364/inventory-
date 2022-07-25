@@ -46,10 +46,6 @@ router.get('/user/password', authenticated, userContorller.changePasswordPage) /
 router.put('/user/password/:id', authenticated, userContorller.putPassword) //發出更新密碼請求
 ////
 
-// about products
-router.get('/products', (req, res) => { res.send(`OOPS!!  施工中...`) }) //瀏覽所有產品頁面(尚未完成)
-////
-
 // about Customer
 router.get('/manager/customers', authenticateManager, managerController.getCustomers) //瀏覽所有客戶頁面
 router.get('/manager/customers/create', authenticateManager, managerController.getCreateCustomer) //瀏覽新增客戶頁面
@@ -63,7 +59,7 @@ router.get('/manager/customers/:id/edit', authenticateManager, managerController
 // about PartNumbers
 router.get('/manager/partnumber/create', authenticateManager, managerController.getCreatePartNumber) //瀏覽新增部品頁面
 router.post('/manager/partnumber/create', authenticateManager, managerController.postCreatePartNumber) //發出新增部品請求
-router.get('/manager/partnumbers', authenticateManager, managerController.getParNumbers) //瀏覽品番清單頁面
+router.get('/manager/partnumbers', authenticateManager, managerController.getParNumbers) //瀏覽部品清單頁面
 router.delete('/manager/partnumbers/:id', authenticateManager, managerController.deletePartNumber) //刪除一般部品
 router.put('/manager/partnumbers/:id', authenticateManager, managerController.putPartNumber) //更新一般部品資料
 router.delete('/manager/subpartnumbers/:id', authenticateManager, managerController.deleteSubPartNumber) //刪除子部品
@@ -72,11 +68,18 @@ router.get('/manager/partnumbers/:id/edit', authenticateManager, managerControll
 router.get('/manager/subpartnumbers/:id/edit', authenticateManager, managerController.getSubPartNumber) //瀏覽變更子部品資料頁
 ////
 
+
+// about Warehousing&shipping
 router.get('/warehouse', authenticated, (req, res) => { res.redirect('/warehouse/partnumbers') }) //瀏覽在庫查詢頁面
 router.get('/warehouse/partnumbers', authenticated, warehouseController.getParNumbers)
 router.get('/warehouse/warehousing', authenticated, warehouseController.getWarehousing) //瀏覽部品入庫頁面
 router.post('/warehouse/warehousing', authenticated, warehouseController.postWarehousing) //送出部品入庫
 router.get('/warehouse/shipping', authenticated, warehouseController.getShipping) //瀏覽部品出貨頁面
 router.post('/warehouse/shipping', authenticated, warehouseController.postShipping) //瀏覽部品出貨頁面
+//
+
+// about WarehousingHistories
+router.get('/manager/WarehousingHistories', authenticateManager, managerController.getWarehousingHistories) //瀏覽出入庫歷史紀錄頁
+//
 
 module.exports = router

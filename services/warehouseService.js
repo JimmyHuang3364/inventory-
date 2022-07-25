@@ -24,11 +24,11 @@ const warehouseService = {
               raw: true,
               nest: true,
               order: [['createdAt', 'DESC']]
-            }).then((warehousingHistory) => {
-              if (warehousingHistory) {
-                for (i = 0; i < warehousingHistory.length; i++) { warehousingHistory[i].createdAt = `${warehousingHistory[i].createdAt.getFullYear()}/${warehousingHistory[i].createdAt.getMonth()}/${warehousingHistory[i].createdAt.getDate()}` }
+            }).then((warehousingHistories) => {
+              if (warehousingHistories) {
+                for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
               }
-              callback({ partNumbers: partNumbers, customers: customers, warehousingHistory: warehousingHistory })
+              callback({ partNumbers: partNumbers, customers: customers, warehousingHistories: warehousingHistories })
             })
           })
         })

@@ -128,7 +128,15 @@ const managerController = {
         return res.redirect('/manager/partnumbers')
       }
     })
+  },
+
+  // 取得所有WarehousingHistories資料
+  getWarehousingHistories: (req, res) => {
+    return managerService.getWarehousingHistories(req, res, (data) => {
+      return res.render('manager/warehousingHistories', data)
+    })
   }
+  // 取得所有WarehousingHistories資料
 }
 
 module.exports = managerController
