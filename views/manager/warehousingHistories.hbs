@@ -22,6 +22,9 @@
         <thead>
           <tr class="table-active" style="text-align: center;">
             <th scope="col">
+              <h4>#</h4>
+            </th>
+            <th scope="col">
               <h4>日期</h4>
             </th>
             <th scope="col">
@@ -48,6 +51,7 @@
         <tbody>
           {{#each warehousingHistories}}
           <tr style="text-align: center;">
+            <th scope="row">#{{this.id}}</th> {{!--編號--}}
             <th scope="row">{{this.createdAt}}</th> {{!--日期--}}
             <td>{{this.name}}</td> {{!--品番--}}
             <td>{{this.quntityOfWarehousing}}</td> {{!--入庫--}}
@@ -55,7 +59,7 @@
             <td>{{this.totalQuntity}}</td> {{!--餘存--}}
             <td>{{this.note}}</td> {{!--備註--}}
             <td>
-              <form action="#" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
+              <form action="/manager/warehousingHistories/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('注意!! \n刪除並不會修正庫存數量!! \n確認刪除嗎?')">
                 <button type="submit" class="btn btn-outline-danger btn-sm">刪除</button>
               </form>
             </td>

@@ -69,7 +69,7 @@ const warehouseService = {
   postWarehousing: (req, res, callback) => {
     return PartNumber.findOne({ where: { name: req.body.partNum } }) // 搜尋有無此母部品
       .then((partNumber) => {
-        console.log(partNumber.customerId)
+        // console.log(partNumber.customerId)
         if (partNumber) { // 有此母部品
           WarehousingHistory.create({  //新增出入庫歷史紀錄
             name: req.body.partNum,
@@ -88,9 +88,9 @@ const warehouseService = {
                 WarehousingHistory.create({
                   name: req.body.partNum,
                   quntityOfWarehousing: Number(req.body.quantity),
-                  totalQuntity: Number(partNumber.quantity) + Number(req.body.quantity),
+                  totalQuntity: Number(subPartNumber.quantity) + Number(req.body.quantity),
                   note: req.body.note,
-                  customerId: Number(partNumber.customerId)
+                  customerId: Number(subPartNumber.customerId)
                 })
                 return subPartNumber.update({ quantity: Number(subPartNumber.quantity) + Number(req.body.quantity) }) // 更新子部品在庫數
                   .then((subPartNumber) => { callback({ status: 'success', message: `${subPartNumber.name}已入庫${req.body.quantity}pcs，在庫數 ${subPartNumber.quantity}pcs` }) })
@@ -129,9 +129,9 @@ const warehouseService = {
                 WarehousingHistory.create({
                   name: req.body.partNum,
                   quntityOfShipping: Number(req.body.quantity),
-                  totalQuntity: Number(partNumber.quantity) - Number(req.body.quantity),
+                  totalQuntity: Number(subPartNumber.quantity) - Number(req.body.quantity),
                   note: req.body.note,
-                  customerId: Number(partNumber.customerId)
+                  customerId: Number(subPartNumber.customerId)
                 })
                 if (Number(subPartNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: `在庫數剩餘 ${subPartNumber.quantity}pcs，不足出貨！！ 請確認數量！！` }) } //在庫數不足出貨
 

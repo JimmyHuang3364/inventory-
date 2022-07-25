@@ -107,7 +107,6 @@ const managerService = {
               })
           })
       })
-    // 刪除部品的路由'/manager/partnumbers/:id'
   },
 
   // 取得所有客戶及一般部品後渲染新增部品頁
@@ -390,9 +389,18 @@ const managerService = {
       }
       callback({ warehousingHistories: warehousingHistories })
     })
-  }
+  },
   // 刪除單一個WarehousingHistory資料
-
+  deleteWarehousingHistories: (req, res, callback) => {
+    return WarehousingHistory.findByPk(req.params.id)
+      .then((warehousingHistory) => {
+        // console.log(warehousingHistory.id)
+        warehousingHistory.destroy()
+          .then(() => {
+            callback({ status: 'success', message: `紀錄#${warehousingHistory.id}已刪除` })
+          })
+      })
+  }
 
 }
 

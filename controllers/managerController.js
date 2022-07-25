@@ -135,8 +135,14 @@ const managerController = {
     return managerService.getWarehousingHistories(req, res, (data) => {
       return res.render('manager/warehousingHistories', data)
     })
-  }
+  },
   // 取得所有WarehousingHistories資料
+  deleteWarehousingHistories: (req, res) => {
+    return managerService.deleteWarehousingHistories(req, res, (data) => {
+      req.flash('success_messages', data['message'])
+      return res.redirect('back')
+    })
+  }
 }
 
 module.exports = managerController
