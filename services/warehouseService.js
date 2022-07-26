@@ -71,7 +71,6 @@ const warehouseService = {
   postWarehousing: (req, res, callback) => {
     return PartNumber.findOne({ where: { name: req.body.partNum } }) // 搜尋有無此母部品
       .then((partNumber) => {
-        // console.log(partNumber.customerId)
         if (partNumber) { // 有此母部品
           WarehousingHistory.create({  //新增出入庫歷史紀錄
             quntityOfWarehousing: Number(req.body.quantity),

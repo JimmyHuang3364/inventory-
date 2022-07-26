@@ -187,7 +187,7 @@ const managerService = {
             callback({ partNumbers: partNumbers, customers: customers })
           })
         })
-    } else {
+    } else { // 取得特一Customer所有部品資料
       return PartNumber.findAll({
         where: { customerId: Number(req.query.customerId) },
         include: [SubPartNumber],
@@ -379,20 +379,49 @@ const managerService = {
     }
   },
 
-  // 取得所有WarehousingHistories資料
+  // 取得所有Warehousing Histories資料
   getWarehousingHistories: (req, res, callback) => {
-    return WarehousingHistory.findAll({
-      include: [PartNumber, SubPartNumber],
-      raw: true,
-      nest: true,
-      order: [['createdAt', 'DESC']]
-    }).then((warehousingHistories) => {
-      if (warehousingHistories) {
-        for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
-      }
-      callback({ warehousingHistories: warehousingHistories })
-    })
+    if (!req.query.customerId) {
+      return WarehousingHistory.findAll({
+        include: [PartNumber, SubPartNumber],
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']]
+      }).then((warehousingHistories) => {
+        if (warehousingHistories) {
+          for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+        }
+        Customer.findAll({
+          raw: true,
+          nest: true
+        })
+          .then((customers) => {
+            callback({ warehousingHistories: warehousingHistories, customers: customers })
+          })
+      })
+    }
+
+    // 取得特一Customer Warehousing Histories資料
+    if (req.query.customerId) {
+      return WarehousingHistory.findAll({
+        where: { customerId: Number(req.query.customerId) },
+        include: [PartNumber, SubPartNumber],
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']]
+      })
+        .then((warehousingHistories) => {
+          if (warehousingHistories) {
+            for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+          }
+          Customer.findAll({ raw: true, nest: true })
+            .then((customers) => {
+              callback({ warehousingHistories: warehousingHistories, customers: customers, customerId: Number(req.query.customerId) })
+            })
+        })
+    }
   },
+
   // 刪除單一個WarehousingHistory資料
   deleteWarehousingHistories: (req, res, callback) => {
     return WarehousingHistory.findByPk(req.params.id)
