@@ -53,7 +53,7 @@
           <tr style="text-align: center;">
             <th scope="row">#{{this.id}}</th> {{!--編號--}}
             <th scope="row">{{this.createdAt}}</th> {{!--日期--}}
-            <td>{{this.name}}</td> {{!--品番--}}
+            <td>{{#if this.partNumberId}}{{this.PartNumber.name}}{{else}}{{this.SubPartNumber.name}}{{/if}}</td> {{!--品番--}}
             <td>{{this.quntityOfWarehousing}}</td> {{!--入庫--}}
             <td>{{this.quntityOfShipping}}</td> {{!--出庫--}}
             <td>{{this.totalQuntity}}</td> {{!--餘存--}}

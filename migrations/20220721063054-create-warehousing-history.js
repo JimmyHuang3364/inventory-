@@ -8,8 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
+      receiptNumber: {
+        type: Sequelize.INTEGER
       },
       quntityOfWarehousing: {
         type: Sequelize.INTEGER
@@ -24,6 +24,13 @@ module.exports = {
         type: Sequelize.STRING
       },
       customerId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      partNumberId: {
+        type: Sequelize.INTEGER
+      },
+      subPartNumberId: {
         type: Sequelize.INTEGER
       },
       createdAt: {

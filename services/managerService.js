@@ -172,7 +172,8 @@ const managerService = {
   getParNumbers: (req, res, callback) => {
     if (!req.query.customerId) {
       return PartNumber.findAll({
-        include: [SubPartNumber]
+        include: [SubPartNumber],
+        order: [['name', 'ASC']]
       })
         .then((result) => {
           const partNumbers = result.map(r => ({
@@ -189,7 +190,8 @@ const managerService = {
     } else {
       return PartNumber.findAll({
         where: { customerId: Number(req.query.customerId) },
-        include: [SubPartNumber]
+        include: [SubPartNumber],
+        order: [['name', 'ASC']]
       })
         .then((result) => {
           const partNumbers = result.map(r => ({
@@ -371,7 +373,7 @@ const managerService = {
           partNumberId: req.body.affiliatedPartNumber,
           customerId: req.body.customer
         })
-          .then((subPartNumber) => { callback({ status: 'srccess', message: `子部品番${partNumber.name}更新資料成功` }) })
+          .then((subPartNumber) => { callback({ status: 'srccess', message: `子部品番${subPartNumber.name}更新資料成功` }) })
         // 3.回傳結果
       })
     }
@@ -380,6 +382,7 @@ const managerService = {
   // 取得所有WarehousingHistories資料
   getWarehousingHistories: (req, res, callback) => {
     return WarehousingHistory.findAll({
+      include: [PartNumber, SubPartNumber],
       raw: true,
       nest: true,
       order: [['createdAt', 'DESC']]
@@ -394,7 +397,6 @@ const managerService = {
   deleteWarehousingHistories: (req, res, callback) => {
     return WarehousingHistory.findByPk(req.params.id)
       .then((warehousingHistory) => {
-        // console.log(warehousingHistory.id)
         warehousingHistory.destroy()
           .then(() => {
             callback({ status: 'success', message: `紀錄#${warehousingHistory.id}已刪除` })

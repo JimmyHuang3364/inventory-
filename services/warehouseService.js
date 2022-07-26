@@ -21,6 +21,7 @@ const warehouseService = {
             nest: true
           }).then((customers) => {
             WarehousingHistory.findAll({
+              include: [PartNumber, SubPartNumber],
               raw: true,
               nest: true,
               order: [['createdAt', 'DESC']]
@@ -51,14 +52,15 @@ const warehouseService = {
           }).then((customers) => {
             WarehousingHistory.findAll({
               where: { customerId: Number(req.query.customerId) },
+              include: [PartNumber, SubPartNumber],
               raw: true,
               nest: true,
               order: [['createdAt', 'DESC']]
-            }).then((warehousingHistory) => {
-              if (warehousingHistory) {
-                for (i = 0; i < warehousingHistory.length; i++) { warehousingHistory[i].createdAt = `${warehousingHistory[i].createdAt.getFullYear()}/${warehousingHistory[i].createdAt.getMonth()}/${warehousingHistory[i].createdAt.getDate()}` }
+            }).then((warehousingHistories) => {
+              if (warehousingHistories) {
+                for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
               }
-              callback({ partNumbers: partNumbers, customers: customers, customerId: Number(req.query.customerId), warehousingHistory: warehousingHistory })
+              callback({ partNumbers: partNumbers, customers: customers, customerId: Number(req.query.customerId), warehousingHistories: warehousingHistories })
             })
           })
         })
@@ -72,11 +74,11 @@ const warehouseService = {
         // console.log(partNumber.customerId)
         if (partNumber) { // 有此母部品
           WarehousingHistory.create({  //新增出入庫歷史紀錄
-            name: req.body.partNum,
             quntityOfWarehousing: Number(req.body.quantity),
             totalQuntity: Number(partNumber.quantity) + Number(req.body.quantity),
             note: req.body.note,
-            customerId: Number(partNumber.customerId)
+            customerId: Number(partNumber.customerId),
+            partNumberId: Number(partNumber.id)
           })
           return partNumber.update({ quantity: Number(partNumber.quantity) + Number(req.body.quantity) }) // 更新母部品在庫數
             .then((partNumber) => { callback({ status: 'success', message: `${partNumber.name}已入庫${req.body.quantity}pcs，在庫數 ${partNumber.quantity}pcs` }) })
@@ -86,11 +88,11 @@ const warehouseService = {
             .then((subPartNumber) => {
               if (subPartNumber) { // 有此子部品
                 WarehousingHistory.create({
-                  name: req.body.partNum,
                   quntityOfWarehousing: Number(req.body.quantity),
                   totalQuntity: Number(subPartNumber.quantity) + Number(req.body.quantity),
                   note: req.body.note,
-                  customerId: Number(subPartNumber.customerId)
+                  customerId: Number(subPartNumber.customerId),
+                  subPartNumberId: Number(subPartNumber.id)
                 })
                 return subPartNumber.update({ quantity: Number(subPartNumber.quantity) + Number(req.body.quantity) }) // 更新子部品在庫數
                   .then((subPartNumber) => { callback({ status: 'success', message: `${subPartNumber.name}已入庫${req.body.quantity}pcs，在庫數 ${subPartNumber.quantity}pcs` }) })
@@ -108,11 +110,11 @@ const warehouseService = {
       .then((partNumber) => {
         if (partNumber) { // 有此母部品
           WarehousingHistory.create({
-            name: req.body.partNum,
             quntityOfShipping: Number(req.body.quantity),
             totalQuntity: Number(partNumber.quantity) - Number(req.body.quantity),
             note: req.body.note,
-            customerId: Number(partNumber.customerId)
+            customerId: Number(partNumber.customerId),
+            partNumberId: Number(partNumber.id)
           })
           if (Number(partNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: `在庫數剩餘 ${partNumber.quantity}pcs，不足出貨！！ 請確認數量！！` }) } //在庫數不足出貨
 
@@ -127,11 +129,11 @@ const warehouseService = {
             .then((subPartNumber) => {
               if (subPartNumber) { // 有此子部品
                 WarehousingHistory.create({
-                  name: req.body.partNum,
                   quntityOfShipping: Number(req.body.quantity),
                   totalQuntity: Number(subPartNumber.quantity) - Number(req.body.quantity),
                   note: req.body.note,
-                  customerId: Number(subPartNumber.customerId)
+                  customerId: Number(subPartNumber.customerId),
+                  subPartNumberId: Number(subPartNumber.id)
                 })
                 if (Number(subPartNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: `在庫數剩餘 ${subPartNumber.quantity}pcs，不足出貨！！ 請確認數量！！` }) } //在庫數不足出貨
 

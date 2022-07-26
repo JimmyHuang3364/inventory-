@@ -12,15 +12,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       WarehousingHistory.belongsTo(models.Customer)
+      WarehousingHistory.belongsTo(models.PartNumber)
+      WarehousingHistory.belongsTo(models.SubPartNumber)
     }
   };
   WarehousingHistory.init({
-    name: DataTypes.STRING,
+    receiptNumber: DataTypes.INTEGER,
     quntityOfWarehousing: DataTypes.INTEGER,
     quntityOfShipping: DataTypes.INTEGER,
     totalQuntity: DataTypes.INTEGER,
     note: DataTypes.STRING,
-    customerId: DataTypes.INTEGER
+    customerId: DataTypes.INTEGER,
+    partNumberId: DataTypes.INTEGER,
+    subPartNumberId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'WarehousingHistory',

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       SubPartNumber.belongsTo(models.PartNumber)
       SubPartNumber.belongsTo(models.Customer)
+      SubPartNumber.hasMany(models.WarehousingHistory)
     }
   };
   SubPartNumber.init({
