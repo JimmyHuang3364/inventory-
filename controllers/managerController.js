@@ -143,6 +143,13 @@ const managerController = {
       req.flash('success_messages', data['message'])
       return res.redirect('back')
     })
+  },
+
+  // 關鍵字搜尋品番
+  getSearchPartNumbers: (req, res) => {
+    return managerService.getSearchPartNumbers(req, res, (data) => {
+      return res.render('manager/partnumbers', data)
+    })
   }
 }
 

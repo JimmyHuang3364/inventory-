@@ -60,6 +60,7 @@ router.get('/manager/customers/:id/edit', authenticateManager, managerController
 router.get('/manager/partnumber/create', authenticateManager, managerController.getCreatePartNumber) //瀏覽新增部品頁面
 router.post('/manager/partnumber/create', authenticateManager, managerController.postCreatePartNumber) //發出新增部品請求
 router.get('/manager/partnumbers', authenticateManager, managerController.getParNumbers) //瀏覽部品清單頁面
+router.get('/manager/partnumbers/search', authenticateManager, managerController.getSearchPartNumbers) //關鍵字搜尋部品番
 router.delete('/manager/partnumbers/:id', authenticateManager, managerController.deletePartNumber) //刪除一般部品
 router.put('/manager/partnumbers/:id', authenticateManager, managerController.putPartNumber) //更新一般部品資料
 router.delete('/manager/subpartnumbers/:id', authenticateManager, managerController.deleteSubPartNumber) //刪除子部品
@@ -76,7 +77,7 @@ router.get('/warehouse/warehousing', authenticated, warehouseController.getWareh
 router.post('/warehouse/warehousing', authenticated, warehouseController.postWarehousing) //送出部品入庫
 router.get('/warehouse/shipping', authenticated, warehouseController.getShipping) //瀏覽部品出貨頁面
 router.post('/warehouse/shipping', authenticated, warehouseController.postShipping) //瀏覽部品出貨頁面
-router.get('/warehouse/partnumbers/search', authenticateManager, warehouseController.getSearchPartNumbers) //關鍵字搜尋部品番
+router.get('/warehouse/partnumbers/search', authenticateManager, warehouseController.getSearchPartNumbers) //關鍵字條件搜尋部品番
 //
 
 // about WarehousingHistories

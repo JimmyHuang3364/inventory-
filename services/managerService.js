@@ -3,6 +3,7 @@ const Customer = db.Customer
 const PartNumber = db.PartNumber
 const SubPartNumber = db.SubPartNumber
 const WarehousingHistory = db.WarehousingHistory
+const { Op } = require("sequelize")
 
 const managerService = {
   // 取得所有客戶
@@ -431,6 +432,33 @@ const managerService = {
             callback({ status: 'success', message: `紀錄#${warehousingHistory.id}已刪除` })
           })
       })
+  },
+
+  // 關鍵字搜尋品番
+  getSearchPartNumbers: async (req, res, callback) => {
+    const result = await PartNumber.findAll({
+      where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+      include: [SubPartNumber],
+      order: [['name', 'ASC']]
+    })
+    if (result.length) {
+      const partNumbers = await result.map(r => ({
+        ...r.dataValues,
+        subPartNumbers: r.SubPartNumbers.map(sub => ({ ...sub.dataValues }))
+      }))
+      return callback({ partNumbers: partNumbers, searchText: req.body.searchText })
+    }
+
+    if (!result.length) {
+      const subPartNumbers = await SubPartNumber.findAll({
+        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        order: [['name', 'ASC']],
+        raw: true,
+        nest: true
+      })
+      console.log(subPartNumbers)
+      return callback({ partNumbers: subPartNumbers, searchText: req.body.searchText })
+    }
   }
 
 }
