@@ -42,6 +42,14 @@ const warehouseController = {
         return res.redirect('back')
       }
     })
+  },
+
+  //關鍵字搜尋部品番
+  getSearchPartNumbers: (req, res) => {
+    warehouseService.getSearchPartNumbers(req, res, (data) => {
+      console.log(data)
+      return res.render('warehouse', data)
+    })
   }
 }
 

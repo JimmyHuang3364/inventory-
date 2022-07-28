@@ -56,7 +56,7 @@ router.delete('/manager/customers/:id', authenticateManager, managerController.d
 router.get('/manager/customers/:id/edit', authenticateManager, managerController.editCustomer) //瀏覽變更客戶資料頁
 ////
 
-// about PartNumbers
+// about managerPartNumbers
 router.get('/manager/partnumber/create', authenticateManager, managerController.getCreatePartNumber) //瀏覽新增部品頁面
 router.post('/manager/partnumber/create', authenticateManager, managerController.postCreatePartNumber) //發出新增部品請求
 router.get('/manager/partnumbers', authenticateManager, managerController.getParNumbers) //瀏覽部品清單頁面
@@ -76,6 +76,7 @@ router.get('/warehouse/warehousing', authenticated, warehouseController.getWareh
 router.post('/warehouse/warehousing', authenticated, warehouseController.postWarehousing) //送出部品入庫
 router.get('/warehouse/shipping', authenticated, warehouseController.getShipping) //瀏覽部品出貨頁面
 router.post('/warehouse/shipping', authenticated, warehouseController.postShipping) //瀏覽部品出貨頁面
+router.get('/warehouse/partnumbers/search', authenticateManager, warehouseController.getSearchPartNumbers) //關鍵字搜尋部品番
 //
 
 // about WarehousingHistories
