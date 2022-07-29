@@ -240,15 +240,13 @@ const managerService = {
               .then((subPartNumbers) => {
                 // 刪除子部品
                 if (subPartNumbers.length) {
-                  return subPartNumbers.forEach(element => {
+                  subPartNumbers.forEach(element => {
                     SubPartNumber.findByPk(element.id)
                       .then((subPartNumber) => {
                         subPartNumber.destroy()
-                          .then(() => {
-                            callback({ status: 'success', message: `部品${partNumber.name}連同子部品已成功摻除` })
-                          })
                       })
                   })
+                  return callback({ status: 'success', message: `部品${partNumber.name}連同子部品已成功摻除` })
                 } else {
                   return callback({ status: 'success', message: `部品${partNumber.name}連同子部品已成功摻除` })
                 }
