@@ -145,10 +145,17 @@ const managerController = {
     })
   },
 
-  // 關鍵字搜尋品番
+  // 搜尋品番
   getSearchPartNumbers: (req, res) => {
     return managerService.getSearchPartNumbers(req, res, (data) => {
       return res.render('manager/partnumbers', data)
+    })
+  },
+
+  // 搜尋歷史紀錄
+  getSearchWarehousingHistories: (req, res) => {
+    return managerService.getSearchWarehousingHistories(req, res, (data) => {
+      return res.render('manager/warehousingHistories', data)
     })
   }
 }

@@ -434,7 +434,7 @@ const managerService = {
       })
   },
 
-  // 關鍵字搜尋品番
+  // 搜尋品番頁
   getSearchPartNumbers: async (req, res, callback) => {
     const result = await PartNumber.findAll({
       where: { name: { [Op.like]: `%${req.body.searchText}%` } },
@@ -459,8 +459,138 @@ const managerService = {
       console.log(subPartNumbers)
       return callback({ partNumbers: subPartNumbers, searchText: req.body.searchText })
     }
-  }
+  },
 
+  // 搜尋歷史紀錄
+  getSearchWarehousingHistories: async (req, res, callback) => {
+    if (!req.body.startDate && !req.body.endDate) {  //無日期區間搜尋
+      const partResult = await PartNumber.findAll({
+        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        include: [SubPartNumber],
+        order: [['name', 'ASC']]
+      })
+
+      if (partResult.length) { //搜尋母部品&子部品
+        const partNumbers = partResult.map(r => ({
+          ...r.dataValues,
+          subPartNumbers: r.SubPartNumbers.map(sub => ({ ...sub.dataValues }))
+        }))
+        const searchPartNumberId = partNumbers.map(r => r.id)  //要依partNumberId搜尋歷史紀錄的ID
+        const searchSubPartNumberId = []
+        partNumbers.forEach(element => { element.subPartNumbers.map(r => searchSubPartNumberId.push(r.id)) }) //要依subPartNumberId搜尋歷史紀錄的ID
+        const warehousingHistories = await WarehousingHistory.findAll({
+          include: [PartNumber, SubPartNumber],
+          where: {
+            [Op.or]: [
+              { subPartNumberId: searchSubPartNumberId },
+              { partNumberId: searchPartNumberId },
+            ]
+          },
+          order: [['createdAt', 'DESC']],
+          raw: true,
+          nest: true
+        })
+        if (warehousingHistories) {
+          for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+        }
+        return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories })
+      }
+
+      if (!partResult.length) {  //單搜尋子部品
+        const subPartResult = await SubPartNumber.findAll({
+          where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+          include: [WarehousingHistory],
+          order: [['name', 'ASC']]
+        })
+        const subPartNumbers = await subPartResult.map(r => ({
+          ...r.dataValues,
+        }))
+        const searchSubPartNumberId = await subPartNumbers.map(r => r.id)  //要依subPartNumberId搜尋歷史紀錄的ID
+        const warehousingHistories = await WarehousingHistory.findAll({
+          include: [SubPartNumber],
+          where: { subPartNumberId: searchSubPartNumberId, },
+          order: [['createdAt', 'DESC']],
+          raw: true,
+          nest: true
+        })
+        if (warehousingHistories) {
+          for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+        }
+        return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories })
+      }
+    }
+
+    if (req.body.startDate || req.body.endDate) {  //有日期區間搜尋
+      let startDate = null
+      if (req.body.startDate) { startDate = new Date(new Date(req.body.startDate).setHours(new Date(req.body.startDate).getHours() - 8)) }
+      if (!req.body.startDate) {
+        startDate = new Date(new Date(req.body.endDate).setDate(new Date(req.body.endDate).getDate() - 30))
+        startDate = new Date(new Date(startDate).setHours(new Date(startDate).getHours() - 8))
+      }
+      const endDate = new Date(new Date(req.body.endDate).setHours(new Date(req.body.endDate).getHours() + 16))
+      const partResult = await PartNumber.findAll({
+        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        include: [SubPartNumber],
+        order: [['name', 'ASC']]
+      })
+      if (partResult.length) {
+        const partNumbers = partResult.map(r => ({
+          ...r.dataValues,
+          subPartNumbers: r.SubPartNumbers.map(sub => ({ ...sub.dataValues }))
+        }))
+        const searchPartNumberId = partNumbers.map(r => r.id)  //要依partNumberId搜尋歷史紀錄的ID
+        const searchSubPartNumberId = []
+        partNumbers.forEach(element => { element.subPartNumbers.map(r => searchSubPartNumberId.push(r.id)) }) //要依subPartNumberId搜尋歷史紀錄的ID
+        const warehousingHistories = await WarehousingHistory.findAll({
+          include: [PartNumber, SubPartNumber],
+          where: {
+            [Op.or]: [
+              { subPartNumberId: searchSubPartNumberId },
+              { partNumberId: searchPartNumberId },
+            ],
+            createdAt: {
+              [Op.lt]: new Date(endDate),
+              [Op.gte]: new Date(startDate)
+            }
+          },
+          order: [['createdAt', 'DESC']],
+          raw: true,
+          nest: true
+        })
+        if (warehousingHistories) {
+          for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+        }
+        return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
+      }
+
+      if (!partResult.length) {
+        const subPartResult = await SubPartNumber.findAll({
+          where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+          include: [WarehousingHistory],
+          order: [['name', 'ASC']]
+        })
+        const subPartNumbers = await subPartResult.map(r => ({ ...r.dataValues, }))
+        const searchSubPartNumberId = await subPartNumbers.map(r => r.id)  //要依subPartNumberId搜尋歷史紀錄的ID
+        const warehousingHistories = await WarehousingHistory.findAll({
+          include: [SubPartNumber],
+          where: {
+            subPartNumberId: searchSubPartNumberId,
+            createdAt: {
+              [Op.lt]: new Date(endDate),
+              [Op.gte]: new Date(startDate)
+            },
+          },
+          order: [['createdAt', 'DESC']],
+          raw: true,
+          nest: true
+        })
+        if (warehousingHistories) {
+          for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+        }
+        return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
+      }
+    }
+  }
 }
 
 module.exports = managerService

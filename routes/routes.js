@@ -82,6 +82,7 @@ router.get('/warehouse/partnumbers/search', authenticateManager, warehouseContro
 
 // about WarehousingHistories
 router.get('/manager/WarehousingHistories', authenticateManager, managerController.getWarehousingHistories) //瀏覽出入庫歷史紀錄頁
+router.get('/manager/WarehousingHistories/search', authenticateManager, managerController.getSearchWarehousingHistories) //瀏覽出入庫歷史紀錄頁
 router.delete('/manager/WarehousingHistories/:id', authenticateManager, managerController.deleteWarehousingHistories) //刪除特一出入庫歷史紀錄
 //
 

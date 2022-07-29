@@ -152,7 +152,6 @@ const warehouseService = {
   //關鍵字搜尋部品番
   getSearchPartNumbers: (req, res, callback) => {
     if (!req.body.startDate && !req.body.endDate) {  //無日期區間搜尋
-      console.log('沒有日期')
       PartNumber.findAll({
         where: { name: { [Op.like]: `%${req.body.searchText}%` } },
         include: [SubPartNumber],
