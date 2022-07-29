@@ -23,6 +23,7 @@ const warehouseService = {
           }).then((customers) => {
             WarehousingHistory.findAll({
               include: [PartNumber, SubPartNumber],
+              limit: 50,
               raw: true,
               nest: true,
               order: [['createdAt', 'DESC']]
@@ -54,6 +55,7 @@ const warehouseService = {
             WarehousingHistory.findAll({
               where: { customerId: Number(req.query.customerId) },
               include: [PartNumber, SubPartNumber],
+              limit: 50,
               raw: true,
               nest: true,
               order: [['createdAt', 'DESC']]

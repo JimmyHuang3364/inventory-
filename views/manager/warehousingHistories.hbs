@@ -21,16 +21,12 @@
       </div>
     </form>
 
-    <div class="d-flex flex-row justify-content-between align-items-center">
+    <div class="d-flex flex-row justify-content-between align-items-center mt-3">
       <div class="">
         <a class="btn btn-outline-secondary {{#if customerId}}{{else}}active{{/if}}" href="/manager/WarehousingHistories" role="button">全部 {{CustomerId}}</a>
         {{#each customers}}
         <a class="btn btn-outline-secondary {{#ifCond this.id ../customerId}}active{{/ifCond}}" href="?customerId={{this.id}}" role="button">{{this.name}}</a>
         {{/each}}
-      </div>
-
-      <div>
-        <a class="btn btn-warning mb-2" href="/manager/partnumber/create" role="button" style="margin-left: 60.994px;">+ 新增部品</a>
       </div>
     </div>
 
