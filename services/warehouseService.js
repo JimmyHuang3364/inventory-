@@ -28,8 +28,12 @@ const warehouseService = {
               nest: true,
               order: [['createdAt', 'DESC']]
             }).then((warehousingHistories) => {
+
               if (warehousingHistories) {
-                for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+                for (i = 0; i < warehousingHistories.length; i++) {
+                  warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}`
+                  console.log(warehousingHistories[i].textCreatedAt)
+                }
               }
               callback({ partNumbers: partNumbers, customers: customers, warehousingHistories: warehousingHistories })
             })
@@ -61,7 +65,7 @@ const warehouseService = {
               order: [['createdAt', 'DESC']]
             }).then((warehousingHistories) => {
               if (warehousingHistories) {
-                for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+                for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
               }
               callback({ partNumbers: partNumbers, customers: customers, customerId: Number(req.query.customerId), warehousingHistories: warehousingHistories })
             })
@@ -265,7 +269,7 @@ const warehouseService = {
             })
               .then((warehousingHistories) => {
                 if (warehousingHistories) {
-                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
                 return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories })
               })
@@ -290,7 +294,7 @@ const warehouseService = {
                   nest: true
                 })
                 if (warehousingHistories) {
-                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
                 return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories })
               })
@@ -339,7 +343,7 @@ const warehouseService = {
             })
               .then((warehousingHistories) => {
                 if (warehousingHistories) {
-                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
                 return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
               })
@@ -370,7 +374,7 @@ const warehouseService = {
                   nest: true
                 })
                 if (warehousingHistories) {
-                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].createdAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth()}/${warehousingHistories[i].createdAt.getDate()}` }
+                  for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
                 return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
               })
