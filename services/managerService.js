@@ -119,7 +119,8 @@ const managerService = {
       .then((customers) => {
         return PartNumber.findAll({
           raw: true,
-          nest: true
+          nest: true,
+          order: [['name', 'ASC']]
         })
           .then((partNumbers) => {
             callback({ customers: customers, partNumbers: partNumbers })
