@@ -49,7 +49,7 @@
             <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
             <td class="d-flex justify-content-around">
               <a class="btn btn-outline-warning btn-sm" href='/manager/{{#if this.partNumberId}}subpartnumbers{{else}}partnumbers{{/if}}/{{this.id}}/edit'>變更資料</a>
-              <form action="/manager/partnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
+              <form action="/manager/{{#if this.partNumberId}}subpartnumbers{{else}}partnumbers{{/if}}/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
                 <button type="submit" class="btn btn-outline-danger btn-sm">刪除</button>
               </form>
             </td>
