@@ -43,12 +43,12 @@
         <tbody>
           {{#each partNumbers}}
           <tr style="text-align: center;">
-            <th scope="row">{{this.name}}</th> {{!--品番--}}
+            <th scope="row" class="{{#if this.partNumberId}}text-info{{/if}}">{{this.name}}</th> {{!--品番--}}
             <td class="{{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
             <td>{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
             <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
             <td class="d-flex justify-content-around">
-              <a class="btn btn-outline-warning btn-sm" href='/manager/partnumbers/{{this.id}}/edit'>變更資料</a>
+              <a class="btn btn-outline-warning btn-sm" href='/manager/{{#if this.partNumberId}}subpartnumbers{{else}}partnumbers{{/if}}/{{this.id}}/edit'>變更資料</a>
               <form action="/manager/partnumbers/{{this.id}}/?_method=DELETE" method="post" onSubmit="javascript:return window.confirm('確認刪除嗎?')">
                 <button type="submit" class="btn btn-outline-danger btn-sm">刪除</button>
               </form>
