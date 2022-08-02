@@ -8,12 +8,16 @@ const warehouseController = {
     })
   },
 
-  getWarehousing: (req, res) => {
-    return res.render('Warehousing')
+  getWarehousing: (req, res) => {  //渲染出庫頁面
+    warehouseService.getWarehousingAndShipping(req, res, (data) => {
+      return res.render('Warehousing', data)
+    })
   },
 
   getShipping: (req, res) => {
-    return res.render('shipping')
+    warehouseService.getWarehousingAndShipping(req, res, (data) => {
+      return res.render('shipping', data)
+    })
   },
 
   postWarehousing: (req, res) => {
@@ -47,7 +51,6 @@ const warehouseController = {
   //關鍵字搜尋部品番
   getSearchPartNumbers: (req, res) => {
     warehouseService.getSearchPartNumbers(req, res, (data) => {
-      console.log(data)
       return res.render('warehouse', data)
     })
   }

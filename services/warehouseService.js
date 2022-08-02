@@ -32,7 +32,6 @@ const warehouseService = {
               if (warehousingHistories) {
                 for (i = 0; i < warehousingHistories.length; i++) {
                   warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}`
-                  console.log(warehousingHistories[i].textCreatedAt)
                 }
               }
               callback({ partNumbers: partNumbers, customers: customers, warehousingHistories: warehousingHistories })
@@ -84,7 +83,8 @@ const warehouseService = {
             totalQuntity: Number(partNumber.quantity) + Number(req.body.quantity),
             note: req.body.note,
             customerId: Number(partNumber.customerId),
-            partNumberId: Number(partNumber.id)
+            partNumberId: Number(partNumber.id),
+            createdAt: new Date(req.body.warehousingDate)
           })
           return partNumber.update({ quantity: Number(partNumber.quantity) + Number(req.body.quantity) }) // 更新母部品在庫數
             .then((partNumber) => {
@@ -119,11 +119,12 @@ const warehouseService = {
                   totalQuntity: Number(subPartNumber.quantity) + Number(req.body.quantity),
                   note: req.body.note,
                   customerId: Number(subPartNumber.customerId),
-                  subPartNumberId: Number(subPartNumber.id)
+                  subPartNumberId: Number(subPartNumber.id),
+                  createdAt: new Date(req.body.warehousingDate)
                 })
                 return subPartNumber.update({ quantity: Number(subPartNumber.quantity) + Number(req.body.quantity) }) // 更新子部品在庫數
                   .then((subPartNumber) => {
-                    const toDayLastYear = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+                    const toDayLastYear = new Date(new Date().setFullYear(new Date().getFullYear() - 1)) //1月=0
                     return WarehousingHistory.findAll({
                       where: { createdAt: { [Op.lt]: toDayLastYear } },
                       raw: true,
@@ -161,7 +162,8 @@ const warehouseService = {
             totalQuntity: Number(partNumber.quantity) - Number(req.body.quantity),
             note: req.body.note,
             customerId: Number(partNumber.customerId),
-            partNumberId: Number(partNumber.id)
+            partNumberId: Number(partNumber.id),
+            createdAt: new Date(req.body.shippingDate)
           })
           if (Number(partNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: `在庫數剩餘 ${partNumber.quantity}pcs，不足出貨！！ 請確認數量！！` }) } //在庫數不足出貨
 
@@ -201,7 +203,8 @@ const warehouseService = {
                   totalQuntity: Number(subPartNumber.quantity) - Number(req.body.quantity),
                   note: req.body.note,
                   customerId: Number(subPartNumber.customerId),
-                  subPartNumberId: Number(subPartNumber.id)
+                  subPartNumberId: Number(subPartNumber.id),
+                  createdAt: new Date(req.body.shippingDate)
                 })
                 if (Number(subPartNumber.quantity) < Number(req.body.quantity)) { return callback({ status: 'error', message: `在庫數剩餘 ${subPartNumber.quantity}pcs，不足出貨！！ 請確認數量！！` }) } //在庫數不足出貨
 
@@ -303,7 +306,6 @@ const warehouseService = {
     }
 
     if (req.body.startDate || req.body.endDate) {  //有日期區間搜尋
-
       let startDate = null
       if (req.body.startDate) { startDate = new Date(new Date(req.body.startDate).setHours(new Date(req.body.startDate).getHours() - 8)) }
       if (!req.body.startDate) {
@@ -342,10 +344,12 @@ const warehouseService = {
               nest: true
             })
               .then((warehousingHistories) => {
+                searchStartDate = req.body.startDate
+                searchEndDate = req.body.endDate
                 if (warehousingHistories) {
                   for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
-                return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
+                return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText, searchStartDate, searchEndDate })
               })
           }
 
@@ -373,15 +377,26 @@ const warehouseService = {
                   raw: true,
                   nest: true
                 })
+                searchStartDate = req.body.startDate
+                searchEndDate = req.body.endDate
                 if (warehousingHistories) {
                   for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
-                return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
+                return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText, searchStartDate, searchEndDate })
               })
           }
         })
     }
-  }
+  },
+
+  //取得今天日期並渲染入庫&出庫頁面
+  getWarehousingAndShipping: (req, res, callback) => {
+    const todayYear = new Date().getFullYear()
+    if ((new Date().getMonth() + 1) < 9) { todayMonth = `0${new Date().getMonth() + 1}` } else { todayMonth = `${new Date().getMonth() + 1}` }
+    if ((new Date().getDate() + 1) < 9) { todayDate = `0${new Date().getDate()}` } else { todayDate = `${new Date().getDate()}` }
+    const today = `${todayYear}-${todayMonth}-${todayDate}`
+    return callback({ today })
+  },
 }
 
 module.exports = warehouseService
