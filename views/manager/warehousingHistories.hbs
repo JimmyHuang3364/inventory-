@@ -5,7 +5,17 @@
       <div class="form-row">
         <div class="col-auto">
           <p class="text-light m-0">品番</p>
-          <input type="text" class="form-control" name="searchText" id="searchText" placeholder="搜尋番號" value="{{searchText}}">
+          <input list="partnumberList" type="text" class="form-control" name="searchText" id="searchText" placeholder="搜尋番號" value="{{searchText}}">
+          <datalist id="partnumberList">
+            {{#each partNumbers}}
+            <option value="{{this.name}}">
+              {{#if this.subPartNumbers}}
+              {{#each this.subPartNumbers}}
+            <option value="{{this.name}}">
+              {{/each}}
+              {{/if}}
+              {{/each}}
+          </datalist>
         </div>
         <div class="col-auto">
           <p class="text-light m-0">開始</p>

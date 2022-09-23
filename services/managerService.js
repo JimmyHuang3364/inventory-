@@ -396,7 +396,7 @@ const managerService = {
           nest: true
         })
           .then((customers) => {
-            callback({ warehousingHistories: warehousingHistories, customers: customers })
+            return callback({ warehousingHistories: warehousingHistories, customers: customers })
           })
       })
     }
