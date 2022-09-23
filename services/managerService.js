@@ -386,7 +386,7 @@ const managerService = {
         include: [PartNumber, SubPartNumber],
         raw: true,
         nest: true,
-        order: [['createdAt', 'DESC']]
+        order: [['id', 'DESC']]
       }).then((warehousingHistories) => {
         if (warehousingHistories) {
           for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
@@ -408,7 +408,7 @@ const managerService = {
         include: [PartNumber, SubPartNumber],
         raw: true,
         nest: true,
-        order: [['createdAt', 'DESC']]
+        order: [['id', 'DESC']]
       })
         .then((warehousingHistories) => {
           if (warehousingHistories) {
@@ -485,7 +485,7 @@ const managerService = {
               { partNumberId: searchPartNumberId },
             ]
           },
-          order: [['createdAt', 'DESC']],
+          order: [['updatedAt', 'DESC']],
           raw: true,
           nest: true
         })
@@ -508,7 +508,7 @@ const managerService = {
         const warehousingHistories = await WarehousingHistory.findAll({
           include: [SubPartNumber],
           where: { subPartNumberId: searchSubPartNumberId, },
-          order: [['createdAt', 'DESC']],
+          order: [['updatedAt', 'DESC']],
           raw: true,
           nest: true
         })
@@ -552,7 +552,7 @@ const managerService = {
               [Op.gte]: new Date(startDate)
             }
           },
-          order: [['createdAt', 'DESC']],
+          order: [['updatedAt', 'DESC']],
           raw: true,
           nest: true
         })
@@ -579,7 +579,7 @@ const managerService = {
               [Op.gte]: new Date(startDate)
             },
           },
-          order: [['createdAt', 'DESC']],
+          order: [['updatedAt', 'DESC']],
           raw: true,
           nest: true
         })
