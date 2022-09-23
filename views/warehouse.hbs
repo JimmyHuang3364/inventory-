@@ -49,52 +49,54 @@
       {{#if success_messages}}
       <div class="alert alert-success mx-5 mb-3" role="alert" style="margin: 5px 0 ; text-align: center;">{{success_messages}}</div>
       {{/if}}
-      <section class="d-flex flex-row justify-content-around">
-        <div style="flex-basis: 55%;">
-          <table class="table table-striped table-hover table-bordered table-dark">
-            <thead>
-              <tr class="table-active" style="text-align: center;">
-                <th scope="col">
-                  <h4>品番</h4>
-                </th>
-                <th scope="col">
-                  <h4>在庫數量</h4>
-                </th>
-                <th scope="col">
-                  <h4>備註</h4>
-                </th>
-                <th scope="col">
-                  <h4>安全庫存</h4>
-                </th>
-              </tr>
-            </thead>
+      <section class="d-flex justify-content-around">
+        <div style="flex-basis: 45%;">
+          <div class="partnumbers_area">
+            <table class="table table-sm table-striped table-hover table-bordered table-dark">
+              <thead>
+                <tr class="table-active" style="text-align: center;">
+                  <th scope="col">
+                    <h4>品番</h4>
+                  </th>
+                  <th scope="col">
+                    <h4>在庫數量</h4>
+                  </th>
+                  <th scope="col">
+                    <h4>備註</h4>
+                  </th>
+                  <th scope="col">
+                    <h4>安全庫存</h4>
+                  </th>
+                </tr>
+              </thead>
 
-            <tbody>
-              {{#each partNumbers}}
-              <tr style="text-align: center;">
-                <th scope="row">{{this.name}}</th> {{!--品番--}}
-                <td class="{{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
-                <td>{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
-                <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
-              </tr>
-              {{#if this.subPartNumbers}}
-              {{#each this.subPartNumbers}}
-              <tr style="text-align: center;">
-                <th class="py-1 text-info" scope="row">{{this.name}}</th> {{!--品番--}}
-                <td class="py-1 {{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
-                <td class="py-1">{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
-                <td class="py-1">{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
-              </tr>
-              {{/each}}
-              {{/if}}
-              {{/each}}
-            </tbody>
-          </table>
+              <tbody>
+                {{#each partNumbers}}
+                <tr style="text-align: center;">
+                  <th scope="row">{{this.name}}</th> {{!--品番--}}
+                  <td class="{{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
+                  <td>{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
+                  <td>{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
+                </tr>
+                {{#if this.subPartNumbers}}
+                {{#each this.subPartNumbers}}
+                <tr style="text-align: center;">
+                  <th class="py-1 text-info" scope="row">{{this.name}}</th> {{!--品番--}}
+                  <td class="py-1 {{#ifCheckSafety this.quantity this.safetyStockQuantity}} bg-danger {{/ifCheckSafety}}">{{this.quantity}}</td> {{!--在庫數量--}}
+                  <td class="py-1">{{#if this.commonName}} 【{{this.commonName}}】 {{/if}}</td> {{!--備註--}}
+                  <td class="py-1">{{this.safetyStockQuantity}}</td> {{!--安全庫存--}}
+                </tr>
+                {{/each}}
+                {{/if}}
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <div style="flex-basis: 40%;">
-          <div>
-            <h5 class="text-light">歷史紀錄</h5>
+        <div class="mb-3" style="flex-basis: 50%;">
+          <h5 class="text-light">歷史紀錄</h5>
+          <div class="histories_area">
             <table class="table table-sm table-dark table-striped table-hover">
               <thead>
                 <tr class="table-active" style="text-align: center;">
@@ -141,3 +143,30 @@
 
 
   </div>
+
+  <style>
+    .partnumbers_area,
+    .histories_area {
+      max-height: 700px;
+    }
+
+    @media (max-width: 1200px) {
+      section {
+        flex-direction: column-reverse;
+      }
+
+      .partnumbers_area,
+      .histories_area {
+        background: #747474;
+        overflow-y: scroll;
+      }
+
+      .histories_area {
+        height: 150px;
+      }
+
+      .partnumbers_area {
+        max-height: 550px;
+      }
+    }
+  </style>
