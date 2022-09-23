@@ -26,7 +26,7 @@ const warehouseService = {
               limit: 50,
               raw: true,
               nest: true,
-              order: [['updatedAt', 'DESC']]
+              order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']]
             }).then((warehousingHistories) => {
 
               if (warehousingHistories) {
@@ -61,7 +61,7 @@ const warehouseService = {
               limit: 50,
               raw: true,
               nest: true,
-              order: [['updatedAt', 'DESC']]
+              order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']]
             }).then((warehousingHistories) => {
               if (warehousingHistories) {
                 for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
@@ -266,7 +266,7 @@ const warehouseService = {
                   { partNumberId: searchPartNumberId },
                 ]
               },
-              order: [['updatedAt', 'DESC']],
+              order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']],
               raw: true,
               nest: true
             })
@@ -282,7 +282,7 @@ const warehouseService = {
             SubPartNumber.findAll({
               where: { name: { [Op.like]: `%${req.body.searchText}%` } },
               include: [WarehousingHistory],
-              order: [['name', 'ASC']]
+              order: [['createdAt', 'DESC'], ['name', 'ASC']]
             })
               .then(async (result) => {
                 const subPartNumbers = await result.map(r => ({
@@ -292,7 +292,7 @@ const warehouseService = {
                 const warehousingHistories = await WarehousingHistory.findAll({
                   include: [SubPartNumber],
                   where: { subPartNumberId: searchSubPartNumberId, },
-                  order: [['updatedAt', 'DESC']],
+                  order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']],
                   raw: true,
                   nest: true
                 })
@@ -339,7 +339,7 @@ const warehouseService = {
                   [Op.gte]: new Date(startDate)
                 }
               },
-              order: [['updatedAt', 'DESC']],
+              order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']],
               raw: true,
               nest: true
             })
@@ -373,7 +373,7 @@ const warehouseService = {
                       [Op.gte]: new Date(startDate)
                     },
                   },
-                  order: [['updatedAt', 'DESC']],
+                  order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']],
                   raw: true,
                   nest: true
                 })
