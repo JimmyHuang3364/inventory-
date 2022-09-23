@@ -392,8 +392,8 @@ const warehouseService = {
   //取得今天日期並渲染入庫&出庫頁面
   getWarehousingAndShipping: (req, res, callback) => {
     const todayYear = new Date().getFullYear()
-    if ((new Date().getMonth() + 1) < 9) { todayMonth = `0${new Date().getMonth() + 1}` } else { todayMonth = `${new Date().getMonth() + 1}` }
-    if ((new Date().getDate() + 1) < 9) { todayDate = `0${new Date().getDate()}` } else { todayDate = `${new Date().getDate()}` }
+    if ((new Date().getMonth() + 1) <= 9) { todayMonth = `0${new Date().getMonth() + 1}` } else { todayMonth = `${new Date().getMonth() + 1}` }
+    if ((new Date().getDate() + 1) <= 9) { todayDate = `0${new Date().getDate()}` } else { todayDate = `${new Date().getDate()}` }
     const today = `${todayYear}-${todayMonth}-${todayDate}`
     return callback({ today })
   },

@@ -8,13 +8,13 @@ const warehouseController = {
     })
   },
 
-  getWarehousing: (req, res) => {  //渲染出庫頁面
+  getWarehousing: (req, res) => {  //渲染入庫頁面
     warehouseService.getWarehousingAndShipping(req, res, (data) => {
       return res.render('Warehousing', data)
     })
   },
 
-  getShipping: (req, res) => {
+  getShipping: (req, res) => { //渲染出庫頁面
     warehouseService.getWarehousingAndShipping(req, res, (data) => {
       return res.render('shipping', data)
     })
