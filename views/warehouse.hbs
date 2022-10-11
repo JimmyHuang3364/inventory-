@@ -126,13 +126,14 @@
                 <tr style="text-align: center;">
                   <th scope="row">{{this.textCreatedAt}}</th> {{!--日期--}}
                   <td class="{{#if this.SubPartNumber.name}}text-info{{/if}}">{{#if this.partNumberId}}{{this.PartNumber.name}}{{else}}{{this.SubPartNumber.name}}{{/if}}</td> {{!--品番--}}
-                  <td>{{this.quntityOfWarehousing}}</td> {{!--入庫--}}
-                  <td>{{this.quntityOfShipping}}</td> {{!--出庫--}}
+                  <td {{#if this.quntityOfWarehousing}} class="bg-danger" {{/if}}>{{this.quntityOfWarehousing}}</td> {{!--入庫--}}
+                  <td {{#if this.quntityOfShipping}} class="bg-success" {{/if}}>{{this.quntityOfShipping}}</td> {{!--出庫--}}
                   <td>{{this.totalQuntity}}</td> {{!--餘存--}}
                   <td>{{this.note}}</td> {{!--備註--}}
                 </tr>
                 {{/each}}
               </tbody>
+
             </table>
           </div>
         </div>
