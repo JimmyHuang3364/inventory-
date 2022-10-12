@@ -1,4 +1,3 @@
-const res = require('express/lib/response')
 const warehouseService = require('../services/warehouseService.js')
 
 const warehouseController = {
