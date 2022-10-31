@@ -8,12 +8,14 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const flash = require('connect-flash')
 const passport = require('./config/passport')
+const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 3000
 
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs', helpers: require('./config/handlebars-helpers') }))
 app.set('view engine', 'hbs')
@@ -22,6 +24,9 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUniniti
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
+// cors 的預設為全開放
+app.use(cors())
+
 
 // 把 req.flash 放到 res.locals 裡面
 app.use((req, res, next) => {

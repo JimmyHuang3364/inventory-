@@ -17,12 +17,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   SubPartNumber.init({
-    name: DataTypes.STRING,
+    customerId: DataTypes.INTEGER,
     commonName: DataTypes.STRING,
+    name: DataTypes.STRING,
+    partNumberId: DataTypes.INTEGER,
     quantity: DataTypes.INTEGER,
     safetyStockQuantity: DataTypes.INTEGER,
-    partNumberId: DataTypes.INTEGER,
-    customerId: DataTypes.INTEGER
+    usagePerUnit: DataTypes.INTEGER,
+    unitPrice: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'SubPartNumber',

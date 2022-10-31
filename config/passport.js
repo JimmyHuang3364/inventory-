@@ -36,7 +36,6 @@ const jwtOptions = {
 }
 
 passport.use(new JWTStrategy(jwtOptions, (jwtPayload, cb) => {
-  console.log(jwtOptions.secretOrKey)
   User.findByPk(jwtPayload.id)
     .then(user => cb(null, user))
     .catch(err => cb(err))

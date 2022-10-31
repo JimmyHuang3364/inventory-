@@ -43,7 +43,16 @@
           </select>
         </div>
         <div class="form-label-group text-white mt-4">
-          <label for="inputQuantity">數量</label>
+          <label for="usagePerUnit">單位使用量<span class="text-danger" style="font-size: 10px;"> (無-填入0)</span></label>
+          {{!-- <input type="number" name="Usage per unit" class="form-control" placeholder="" min=0 {{#if subPartNumber.quantity}} value="{{subPartNumber.quantity}}" {{else if partNumber.quantity}} value="{{partNumber.quantity}}" {{else}} value=0 {{/if}}> --}}
+          <input type="number" name="usagePerUnit" class="form-control" placeholder="" min=0 value=0>
+        </div>
+        <div class="form-label-group text-white mt-4">
+          <label for="unitPrice">單價</label>
+          <input type="number" name="unitPrice" class="form-control" placeholder="" value="">
+        </div>
+        <div class="form-label-group text-white mt-4">
+          <label for="inputQuantity">在庫數量</label>
           <input type="number" name="quantity" class="form-control" placeholder="" min=0 {{#if subPartNumber.quantity}} value="{{subPartNumber.quantity}}" {{else if partNumber.quantity}} value="{{partNumber.quantity}}" {{else}} value=0 {{/if}}>
         </div>
         <div class="form-label-group text-white mt-4">
@@ -55,10 +64,6 @@
           <input type="text" name="commonName" class="form-control" placeholder="" {{#if subPartNumber.commonName}} value="{{subPartNumber.commonName}}" {{else if partNumber.commonName}} value="{{partNumber.commonName}}" {{/if}}>
         </div>
         {{!-- <div class="form-label-group text-white mt-4">
-          <label for="inputPassword">價格</label>
-          <input type="text" name="fax" class="form-control" placeholder="" value="">
-        </div>
-        <div class="form-label-group text-white mt-4">
           <label for="inputPassword">圖片</label>
           <input type="text" name="fax" class="form-control" placeholder="" value="">
         </div> --}}

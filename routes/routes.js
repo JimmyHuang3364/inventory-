@@ -64,7 +64,7 @@ router.get('/manager/partnumbers/search', authenticateManager, managerController
 router.delete('/manager/partnumbers/:id', authenticateManager, managerController.deletePartNumber) //刪除一般部品
 router.put('/manager/partnumbers/:id', authenticateManager, managerController.putPartNumber) //更新一般部品資料
 router.delete('/manager/subpartnumbers/:id', authenticateManager, managerController.deleteSubPartNumber) //刪除子部品
-router.put('/manager/subpartnumbers/:id', authenticateManager, managerController.putSubPartNumber) //刪除子部品
+router.put('/manager/subpartnumbers/:id', authenticateManager, managerController.putSubPartNumber) //更新子部品
 router.get('/manager/partnumbers/:id/edit', authenticateManager, managerController.getPartNumber) //瀏覽變更一般部品資料頁
 router.get('/manager/subpartnumbers/:id/edit', authenticateManager, managerController.getSubPartNumber) //瀏覽變更子部品資料頁
 ////
@@ -76,13 +76,13 @@ router.get('/warehouse/partnumbers', authenticated, warehouseController.getParNu
 router.get('/warehouse/warehousing', authenticated, warehouseController.getWarehousing) //瀏覽部品入庫頁面
 router.post('/warehouse/warehousing', authenticated, warehouseController.postWarehousing) //送出部品入庫
 router.get('/warehouse/shipping', authenticated, warehouseController.getShipping) //瀏覽部品出貨頁面
-router.post('/warehouse/shipping', authenticated, warehouseController.postShipping) //瀏覽部品出貨頁面
+router.post('/warehouse/shipping', authenticated, warehouseController.postShipping) //部品出貨
 router.get('/warehouse/partnumbers/search', authenticateManager, warehouseController.getSearchPartNumbers) //關鍵字條件搜尋部品番
 //
 
 // about WarehousingHistories
 router.get('/manager/WarehousingHistories', authenticateManager, managerController.getWarehousingHistories) //瀏覽出入庫歷史紀錄頁
-router.get('/manager/WarehousingHistories/search', authenticateManager, managerController.getSearchWarehousingHistories) //瀏覽出入庫歷史紀錄頁
+router.get('/manager/WarehousingHistories/search', authenticateManager, managerController.getSearchWarehousingHistories) //關鍵字條件搜尋出入庫歷史紀錄頁
 router.delete('/manager/WarehousingHistories/:id', authenticateManager, managerController.deleteWarehousingHistories) //刪除特一出入庫歷史紀錄
 //
 

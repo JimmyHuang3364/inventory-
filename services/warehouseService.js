@@ -243,9 +243,9 @@ const warehouseService = {
 
   //關鍵字搜尋部品番
   getSearchPartNumbers: (req, res, callback) => {
-    if (!req.body.startDate && !req.body.endDate) {  //無日期區間搜尋
+    if (!req.query.startDate && !req.query.endDate) {  //無日期區間搜尋
       PartNumber.findAll({
-        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        where: { name: { [Op.like]: `%${req.query.searchText}%` } },
         include: [SubPartNumber],
         order: [['name', 'ASC']]
       })
@@ -280,7 +280,7 @@ const warehouseService = {
 
           if (!result.length) {
             SubPartNumber.findAll({
-              where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+              where: { name: { [Op.like]: `%${req.query.searchText}%` } },
               include: [WarehousingHistory],
               order: [['createdAt', 'DESC'], ['name', 'ASC']]
             })
@@ -305,16 +305,16 @@ const warehouseService = {
         })
     }
 
-    if (req.body.startDate || req.body.endDate) {  //有日期區間搜尋
+    if (req.query.startDate || req.query.endDate) {  //有日期區間搜尋
       let startDate = null
-      if (req.body.startDate) { startDate = new Date(new Date(req.body.startDate).setHours(new Date(req.body.startDate).getHours() - 8)) }
-      if (!req.body.startDate) {
-        startDate = new Date(new Date(req.body.endDate).setDate(new Date(req.body.endDate).getDate() - 30))
+      if (req.query.startDate) { startDate = new Date(new Date(req.query.startDate).setHours(new Date(req.query.startDate).getHours() - 8)) }
+      if (!req.query.startDate) {
+        startDate = new Date(new Date(req.query.endDate).setDate(new Date(req.query.endDate).getDate() - 30))
         startDate = new Date(new Date(startDate).setHours(new Date(startDate).getHours() - 8))
       }
-      const endDate = new Date(new Date(req.body.endDate).setHours(new Date(req.body.endDate).getHours() + 16))
+      const endDate = new Date(new Date(req.query.endDate).setHours(new Date(req.query.endDate).getHours() + 16))
       PartNumber.findAll({
-        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        where: { name: { [Op.like]: `%${req.query.searchText}%` } },
         include: [SubPartNumber],
         order: [['name', 'ASC']]
       })
@@ -344,18 +344,18 @@ const warehouseService = {
               nest: true
             })
               .then((warehousingHistories) => {
-                searchStartDate = req.body.startDate
-                searchEndDate = req.body.endDate
+                searchStartDate = req.query.startDate
+                searchEndDate = req.query.endDate
                 if (warehousingHistories) {
                   for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
-                return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText, searchStartDate, searchEndDate })
+                return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.query.searchText, searchStartDate, searchEndDate })
               })
           }
 
           if (!result.length) {
             SubPartNumber.findAll({
-              where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+              where: { name: { [Op.like]: `%${req.query.searchText}%` } },
               include: [WarehousingHistory],
               order: [['name', 'ASC']]
             })
@@ -377,12 +377,12 @@ const warehouseService = {
                   raw: true,
                   nest: true
                 })
-                searchStartDate = req.body.startDate
-                searchEndDate = req.body.endDate
+                searchStartDate = req.query.startDate
+                searchEndDate = req.query.endDate
                 if (warehousingHistories) {
                   for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
                 }
-                return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText, searchStartDate, searchEndDate })
+                return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.query.searchText, searchStartDate, searchEndDate })
               })
           }
         })

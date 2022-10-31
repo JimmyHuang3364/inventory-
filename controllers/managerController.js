@@ -137,7 +137,7 @@ const managerController = {
     })
   },
 
-  // 取得所有WarehousingHistories資料
+  // 刪除其中一WarehousingHistories資料
   deleteWarehousingHistories: (req, res) => {
     return managerService.deleteWarehousingHistories(req, res, (data) => {
       req.flash('success_messages', data['message'])

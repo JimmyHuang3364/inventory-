@@ -1,11 +1,43 @@
+const bcrypt = require('bcryptjs')
 const db = require('../models')
+const math = require('mathjs')
+const { simplify, parse, derivative } = math
+//使用例子
+// const f = parse('2x + x')
+// const simplified = simplify(f)
+// console.log(simplified.toString()) // '3 * x'
+// console.log(simplified.evaluate({ x: 4 })) // 12
+// 
 const Customer = db.Customer
 const PartNumber = db.PartNumber
 const SubPartNumber = db.SubPartNumber
+const User = db.User
 const WarehousingHistory = db.WarehousingHistory
 const { Op } = require("sequelize")
 
 const managerService = {
+  signUp: (req, res, callback) => { //新建使用者
+    if (req.user.isAdmin || req.user.permissionLevel === 1) {
+      return User.findOne({ where: { name: req.body.name } }).then((user) => {
+        if (user) {
+          return callback({ status: 'error', message: '使用者名稱重複!!' })
+        } else {
+          return User.create({
+            name: req.body.name,
+            password: bcrypt.hashSync(req.body.name, bcrypt.genSaltSync(10), null),
+            isAdmin: false,
+            permissionLevel: Number(req.body.permissionLevel)
+          })
+            .then((user) => {
+              callback({ status: 'success', message: `使用者 ${user.name} 新增成功!!` })
+            })
+        }
+      })
+    } else {
+      return callback({ status: 'error', message: '你無權限使用此操作' })
+    }
+  },
+
   // 取得所有客戶
   getCustomers: (req, res, callback) => {
     return Customer.findAll({
@@ -18,13 +50,20 @@ const managerService = {
 
   // 取得單個客戶詳細資料
   getCustomer: (req, res, callback) => {
-    return Customer.findByPk(req.params.id).then((customer) => {
-      callback({ customer: customer.toJSON() })
-    })
+    return Customer.findByPk(req.params.id)
+      .then((customer) => {
+        if (!customer) {
+          return callback({ status: 'error', message: "無此発注人!!" })
+        }
+        callback({ customer: customer.toJSON() })
+      })
   },
 
   // 新增客戶資料
   postCustomer: (req, res, callback) => {
+    if (!req.body.name) {
+      return callback({ status: 'error', message: "name didn't exist" })
+    }
     return Customer.findOne({ where: { name: req.body.name } }).then((customer) => {
       if (customer) {
         return callback({ status: 'error', message: `此発注人${customer.name}已存在資料庫內!!` })
@@ -97,13 +136,15 @@ const managerService = {
                                           .then(() => { callback({ status: 'success', message: `発注人${customer.name}連同相關資料已成功刪除!!` }) })
                                       })
                                   })
+                                } else {
+                                  return callback({ status: 'success', message: `発注人${customer.name}連同相關資料已成功刪除!!` })
                                 }
-
-                                if (subPartNumbers.length) { return callback({ status: 'success', message: `発注人${customer.name}連同相關資料已成功刪除!!` }) }
                               })
                           })
                       })
                   })
+                } else {
+                  return callback({ status: 'success', message: `発注人${customer.name}連同相關資料已成功刪除!!` })
                 }
               })
           })
@@ -145,6 +186,8 @@ const managerService = {
                 commonName: req.body.commonName,
                 quantity: Number(req.body.quantity),
                 safetyStockQuantity: Number(req.body.safetyStockQuantity),
+                usagePerUnit: Number(req.body.usagePerUnit),
+                unitPrice: req.body.unitPrice,
                 partNumberId: req.body.affiliatedPartNumber,
                 customerId: req.body.customer
               })
@@ -158,6 +201,7 @@ const managerService = {
                 commonName: req.body.commonName,
                 quantity: Number(req.body.quantity),
                 safetyStockQuantity: Number(req.body.safetyStockQuantity),
+                unitPrice: req.body.unitPrice,
                 customerId: req.body.customer
               })
                 .then((partNumber => {
@@ -315,6 +359,8 @@ const managerService = {
                     commonName: req.body.commonName,
                     quantity: Number(req.body.quantity),
                     safetyStockQuantity: Number(req.body.safetyStockQuantity),
+                    usagePerUnit: Number(req.body.usagePerUnit),
+                    unitPrice: req.body.unitPrice,
                     partNumberId: req.body.affiliatedPartNumber,
                     customerId: req.body.customer
                   })
@@ -334,6 +380,7 @@ const managerService = {
           commonName: req.body.commonName,
           quantity: Number(req.body.quantity),
           safetyStockQuantity: Number(req.body.safetyStockQuantity),
+          unitPrice: req.body.unitPrice,
           customerId: req.body.customer
         })
           .then((partNumber) => {
@@ -355,6 +402,7 @@ const managerService = {
             commonName: req.body.commonName,
             quantity: Number(req.body.quantity),
             safetyStockQuantity: Number(req.body.safetyStockQuantity),
+            unitPrice: req.body.unitPrice,
             customerId: req.body.customer
           })
             .then((partNumber) => { callback({ status: 'success', message: `子部品番${partNumber.name}成功轉移至一般部品` }) })  // 5.回傳結果
@@ -370,6 +418,8 @@ const managerService = {
           commonName: req.body.commonName,
           quantity: Number(req.body.quantity),
           safetyStockQuantity: Number(req.body.safetyStockQuantity),
+          usagePerUnit: Number(req.body.usagePerUnit),
+          unitPrice: req.body.unitPrice,
           partNumberId: req.body.affiliatedPartNumber,
           customerId: req.body.customer
         })
@@ -436,7 +486,7 @@ const managerService = {
   // 搜尋品番頁
   getSearchPartNumbers: async (req, res, callback) => {
     const result = await PartNumber.findAll({
-      where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+      where: { name: { [Op.like]: `%${req.query.searchText}%` } },
       include: [SubPartNumber],
       order: [['name', 'ASC']]
     })
@@ -445,26 +495,26 @@ const managerService = {
         ...r.dataValues,
         subPartNumbers: r.SubPartNumbers.map(sub => ({ ...sub.dataValues }))
       }))
-      return callback({ partNumbers: partNumbers, searchText: req.body.searchText })
+      return callback({ partNumbers: partNumbers, searchText: req.query.searchText })
     }
 
     if (!result.length) {
       const subPartNumbers = await SubPartNumber.findAll({
-        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        where: { name: { [Op.like]: `%${req.query.searchText}%` } },
         order: [['name', 'ASC']],
         raw: true,
         nest: true
       })
       console.log(subPartNumbers)
-      return callback({ partNumbers: subPartNumbers, searchText: req.body.searchText })
+      return callback({ partNumbers: subPartNumbers, searchText: req.query.searchText })
     }
   },
 
   // 搜尋歷史紀錄
   getSearchWarehousingHistories: async (req, res, callback) => {
-    if (!req.body.startDate && !req.body.endDate) {  //無日期區間搜尋
+    if (!req.query.startDate && !req.query.endDate) {  //無日期區間搜尋
       const partResult = await PartNumber.findAll({
-        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        where: { name: { [Op.like]: `%${req.query.searchText}%` } },
         include: [SubPartNumber],
         order: [['name', 'ASC']]
       })
@@ -497,7 +547,7 @@ const managerService = {
 
       if (!partResult.length) {  //單搜尋子部品
         const subPartResult = await SubPartNumber.findAll({
-          where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+          where: { name: { [Op.like]: `%${req.query.searchText}%` } },
           include: [WarehousingHistory],
           order: [['name', 'ASC']]
         })
@@ -519,16 +569,16 @@ const managerService = {
       }
     }
 
-    if (req.body.startDate || req.body.endDate) {  //有日期區間搜尋
+    if (req.query.startDate || req.query.endDate) {  //有日期區間搜尋
       let startDate = null
-      if (req.body.startDate) { startDate = new Date(new Date(req.body.startDate).setHours(new Date(req.body.startDate).getHours() - 8)) }
-      if (!req.body.startDate) {
-        startDate = new Date(new Date(req.body.endDate).setDate(new Date(req.body.endDate).getDate() - 30))
+      if (req.query.startDate) { startDate = new Date(new Date(req.query.startDate).setHours(new Date(req.query.startDate).getHours() - 8)) }
+      if (!req.query.startDate) {
+        startDate = new Date(new Date(req.query.endDate).setDate(new Date(req.query.endDate).getDate() - 30))
         startDate = new Date(new Date(startDate).setHours(new Date(startDate).getHours() - 8))
       }
-      const endDate = new Date(new Date(req.body.endDate).setHours(new Date(req.body.endDate).getHours() + 16))
+      const endDate = new Date(new Date(req.query.endDate).setHours(new Date(req.query.endDate).getHours() + 16))
       const partResult = await PartNumber.findAll({
-        where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+        where: { name: { [Op.like]: `%${req.query.searchText}%` } },
         include: [SubPartNumber],
         order: [['name', 'ASC']]
       })
@@ -559,12 +609,12 @@ const managerService = {
         if (warehousingHistories) {
           for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
         }
-        return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
+        return callback({ partNumbers: partNumbers, warehousingHistories: warehousingHistories, searchText: req.query.searchText })
       }
 
       if (!partResult.length) {
         const subPartResult = await SubPartNumber.findAll({
-          where: { name: { [Op.like]: `%${req.body.searchText}%` } },
+          where: { name: { [Op.like]: `%${req.query.searchText}%` } },
           include: [WarehousingHistory],
           order: [['name', 'ASC']]
         })
@@ -586,7 +636,7 @@ const managerService = {
         if (warehousingHistories) {
           for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
         }
-        return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.body.searchText })
+        return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.query.searchText })
       }
     }
   }
