@@ -423,7 +423,7 @@ const managerService = {
           partNumberId: req.body.affiliatedPartNumber,
           customerId: req.body.customer
         })
-          .then((subPartNumber) => { callback({ status: 'srccess', message: `子部品番${subPartNumber.name}更新資料成功` }) })
+          .then((subPartNumber) => { callback({ status: 'success', message: `子部品番${subPartNumber.name}更新資料成功` }) })
         // 3.回傳結果
       })
     }

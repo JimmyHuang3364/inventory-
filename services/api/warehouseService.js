@@ -41,18 +41,51 @@ const warehouseServiceAPI = {
           }
         }
 
-        //數量足夠，更新資料
         for (const item of partNumbers) {
           const partNumber = await PartNumber.findByPk(item.productId, { include: SubPartNumber })
           await partNumber.update({ quantity: Number(partNumber.quantity) + Number(item.quantity) })
+          for (const item of subPartNumbers) { //紀錄子部品入庫數量
+            const subPartNumber = await SubPartNumber.findByPk(item.productId)
+            await WarehousingHistory.create({  //新增出入庫歷史紀錄
+              quntityOfWarehousing: Number(item.quantity),
+              totalQuntity: Number(subPartNumber.quantity),
+              note: item.note,
+              customerId: Number(subPartNumber.customerId),
+              subPartNumberId: Number(subPartNumber.id),
+              createdAt: new Date(item.date)
+            })
+          }
+          await WarehousingHistory.create({  //新增出入庫歷史紀錄
+            quntityOfWarehousing: Number(item.quantity),
+            totalQuntity: Number(partNumber.quantity),
+            note: item.note,
+            customerId: Number(partNumber.customerId),
+            partNumberId: Number(partNumber.id),
+            createdAt: new Date(item.date)
+          })
           for (const subPartNumber of partNumber.SubPartNumbers) {
             const newQuantity = Number(subPartNumber.quantity) - Number(subPartNumber.usagePerUnit) * Number(item.quantity)
             await subPartNumber.update({ quantity: newQuantity })
           }
+          return callback({ status: 'success', message: '完成入庫紀錄' })
         }
-        return callback({ status: 'success', message: '完成入庫紀錄' })
       }
+
       if (!subPartNumbers.length && !partNumbers.length) { throw new Error('無任何資料') }
+
+      // 紀錄子部品入庫數量
+      for (const item of subPartNumbers) { //紀錄子部品入庫數量
+        const subPartNumber = await SubPartNumber.findByPk(item.productId)
+        await WarehousingHistory.create({  //新增出入庫歷史紀錄
+          quntityOfWarehousing: Number(item.quantity),
+          totalQuntity: Number(subPartNumber.quantity),
+          note: item.note,
+          customerId: Number(subPartNumber.customerId),
+          subPartNumberId: Number(subPartNumber.id),
+          createdAt: new Date(item.date)
+        })
+      }
+      return callback({ status: 'success', message: '完成入庫紀錄' })
     } catch (error) {
       return callback({ status: 'error', message: error.message })
     }
@@ -69,7 +102,6 @@ const warehouseServiceAPI = {
       //先檢查一般部品數量夠出貨
       for (const item of partNumbers) {
         const partNumber = await PartNumber.findByPk(item.productId)
-        // if (partNumber) { throw new Error(`部品 ${partNumber.name} 不存在，請確認在庫`) }
         const newQuantity = Number(partNumber.quantity) - Number(item.quantity)
         if (newQuantity < 0) { throw new Error(`出貨錯誤，部品 ${partNumber.name} 數量不足以提供出貨，請確認在庫數量`) }
       }
@@ -77,7 +109,6 @@ const warehouseServiceAPI = {
       //檢查子部品數量夠出貨
       for (const item of subPartNumbers) {
         const subPartNumber = await SubPartNumber.findByPk(item.productId)
-        // if (subPartNumber) { throw new Error(`部品 ${subPartNumber.name} 不存在，請確認在庫`) }
         const newQuantity = Number(subPartNumber.quantity) - Number(item.quantity)
         if (newQuantity < 0) { throw new Error(`出貨錯誤，子部品 ${subPartNumber.name} 數量不足以提供出貨，請確認在庫數量`) }
       }
@@ -89,6 +120,14 @@ const warehouseServiceAPI = {
         const partNumber = await PartNumber.findByPk(item.productId)
         const newQuantity = Number(partNumber.quantity) - Number(item.quantity)
         partNumber.update({ quantity: newQuantity })
+        await WarehousingHistory.create({  //新增出入庫歷史紀錄
+          quntityOfShipping: Number(item.quantity),
+          totalQuntity: Number(partNumber.quantity),
+          note: item.note,
+          customerId: Number(partNumber.customerId),
+          partNumberId: Number(partNumber.id),
+          createdAt: new Date(item.date)
+        })
       }
 
       //子部品
@@ -96,6 +135,14 @@ const warehouseServiceAPI = {
         const subPartNumber = await SubPartNumber.findByPk(item.productId)
         const newQuantity = Number(subPartNumber.quantity) - Number(item.quantity)
         subPartNumber.update({ quantity: newQuantity })
+        await WarehousingHistory.create({  //新增出入庫歷史紀錄
+          quntityOfShipping: Number(item.quantity),
+          totalQuntity: Number(subPartNumber.quantity),
+          note: item.note,
+          customerId: Number(subPartNumber.customerId),
+          subPartNumberId: Number(subPartNumber.id),
+          createdAt: new Date(item.date)
+        })
       }
 
       return callback({ status: 'success', message: '完成出貨紀錄' })
