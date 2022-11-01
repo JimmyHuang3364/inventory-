@@ -26,7 +26,7 @@ const warehouseService = {
               limit: 50,
               raw: true,
               nest: true,
-              order: [['id', 'DESC']]
+              order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']]
             }).then((warehousingHistories) => {
               console.log(warehousingHistories)
               if (warehousingHistories) {
