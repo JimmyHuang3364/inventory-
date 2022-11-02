@@ -436,7 +436,7 @@ const managerService = {
         include: [PartNumber, SubPartNumber],
         raw: true,
         nest: true,
-        order: [['id', 'DESC']]
+        order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']]
       }).then((warehousingHistories) => {
         if (warehousingHistories) {
           for (i = 0; i < warehousingHistories.length; i++) { warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}` }
@@ -458,7 +458,7 @@ const managerService = {
         include: [PartNumber, SubPartNumber],
         raw: true,
         nest: true,
-        order: [['id', 'DESC']]
+        order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']]
       })
         .then((warehousingHistories) => {
           if (warehousingHistories) {
