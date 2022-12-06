@@ -67,8 +67,8 @@ const warehouseServiceAPI = {
             const newQuantity = Number(subPartNumber.quantity) - Number(subPartNumber.usagePerUnit) * Number(item.quantity)
             await subPartNumber.update({ quantity: newQuantity })
           }
-          return callback({ status: 'success', message: '完成入庫紀錄' })
         }
+        return callback({ status: 'success', message: '完成入庫紀錄' })
       }
 
       if (!subPartNumbers.length && !partNumbers.length) { throw new Error('無任何資料') }
