@@ -38,6 +38,32 @@ const managerService = {
     }
   },
 
+  //取得所有使用者
+  getUsers: (req, res, callback) => {
+    return User.findAll({
+      attributes: [
+        'id',
+        'name',
+        'permissionLevel',
+        'isAdmin',
+        'createdAt',
+        'updatedAt'
+      ],
+      raw: true,
+      nest: true
+    }).then(users => {
+      callback({ users: users })
+    })
+  },
+
+  // 刪除使用者
+  deleteUser: async (req, res, callback) => {
+    const user = await User.findByPk(req.params.id)
+    await user.destroy()
+    return callback({ status: 'success', message: `使用者${user.name}資料已成功刪除!!` })
+
+  },
+
   // 取得所有客戶
   getCustomers: (req, res, callback) => {
     return Customer.findAll({

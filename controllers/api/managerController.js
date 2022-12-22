@@ -3,6 +3,17 @@ const managerService = require('../../services/managerService.js')
 
 
 const managerController = {
+  //取得所有使用者
+  getUsers: (req, res) => {
+    managerService.getUsers(req, res, (data) => {
+      return res.json(data)
+    })
+  },
+  deleteUser: (req, res) => {
+    managerService.deleteUser(req, res, (data) => {
+      return res.json(data)
+    })
+  },
   getParNumbers: (req, res) => {
     managerService.getParNumbers(req, res, (data) => {
       return res.json(data)
@@ -57,7 +68,6 @@ const managerController = {
   // 搜尋品番
   getSearchPartNumbers: (req, res) => {
     return managerService.getSearchPartNumbers(req, res, (data) => {
-      console.log(data)
       return res.json(data)
     })
   },

@@ -31,6 +31,8 @@ router.get('/warehouse/partnumbers/search', authenticated, warehouseController.g
 router.post('/warehouse/warehousing', authenticated, upload.array(), warehouseController.postWarehousing) //部品入庫
 router.post('/warehouse/shipping', authenticated, upload.array(), warehouseController.postShipping) //部品出貨
 
+router.get('/manager/users', authenticated, authenticateManager, managerController.getUsers) //取得User清單資料
+router.delete('/manager/users/:id', authenticated, authenticateManager, managerController.deleteUser) //刪除User資料
 router.get('/manager/partnumbers', authenticated, authenticateManager, managerController.getParNumbers) //取得部品清單資料
 router.get('/manager/partnumbers/search', authenticated, authenticateManager, managerController.getSearchPartNumbers) //關鍵字搜尋部品番
 router.post('/manager/partnumber/create', authenticated, authenticateManager, upload.array(), managerController.postCreatePartNumber) //發出新增部品請求
