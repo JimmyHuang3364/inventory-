@@ -11,8 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ProductionProcessItem.hasMany(models.PartNumbers_ProductionProcesses)
-      ProductionProcessItem.hasMany(models.SubPartNumbers_ProductionProcesses)
     }
   };
   ProductionProcessItem.init({
