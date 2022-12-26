@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      QutsourcingList.belongsTo(models.PartNumber)
+      QutsourcingList.belongsTo(models.SubPartNumber)
+      QutsourcingList.belongsTo(models.PartnerFactories)
+      QutsourcingList.belongsTo(models.ProductionProcessItem)
     }
   }
   QutsourcingList.init({
