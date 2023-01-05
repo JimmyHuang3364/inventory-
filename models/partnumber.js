@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       PartNumber.belongsTo(models.Customer)
       PartNumber.hasMany(models.SubPartNumber)
       PartNumber.hasMany(models.WarehousingHistory)
-      PartNumber.hasMany(models.QutsourcingList)
+      PartNumber.hasMany(models.Outsourcinglist)
     }
   };
   PartNumber.init({

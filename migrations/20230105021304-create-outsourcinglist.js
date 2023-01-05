@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('QutsourcingLists', {
+    await queryInterface.createTable('Outsourcinglists', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,23 +12,27 @@ module.exports = {
       partNumberId: {
         type: Sequelize.INTEGER
       },
-      subPartnumberId: {
+      subPartNumberId: {
         type: Sequelize.INTEGER
       },
       partnerFactoryId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       productionProcessItemId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
-      executionDate: {
+      quantity: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      actionDate: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       estimatedReturnDate: {
         type: Sequelize.DATE
-      },
-      note: {
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('QutsourcingLists');
+    await queryInterface.dropTable('Outsourcinglists');
   }
 };

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      PartnerFactories.hasMany(models.QutsourcingList)
+      PartnerFactories.hasMany(models.Outsourcinglist)
     }
   }
   PartnerFactories.init({

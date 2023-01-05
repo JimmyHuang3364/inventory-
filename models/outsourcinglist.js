@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class QutsourcingList extends Model {
+  class Outsourcinglist extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,23 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      QutsourcingList.belongsTo(models.PartNumber)
-      QutsourcingList.belongsTo(models.SubPartNumber)
-      QutsourcingList.belongsTo(models.PartnerFactories)
-      QutsourcingList.belongsTo(models.ProductionProcessItem)
+      Outsourcinglist.belongsTo(models.PartNumber)
+      Outsourcinglist.belongsTo(models.SubPartNumber)
+      Outsourcinglist.belongsTo(models.PartnerFactories)
+      Outsourcinglist.belongsTo(models.ProductionProcessItem)
     }
   }
-  QutsourcingList.init({
+  Outsourcinglist.init({
     partNumberId: DataTypes.INTEGER,
-    subPartnumberId: DataTypes.INTEGER,
+    subPartNumberId: DataTypes.INTEGER,
     partnerFactoryId: DataTypes.INTEGER,
     productionProcessItemId: DataTypes.INTEGER,
-    executionDate: DataTypes.DATE,
-    estimatedReturnDate: DataTypes.DATE,
-    note: DataTypes.STRING
+    quantity: DataTypes.INTEGER,
+    actionDate: DataTypes.DATE,
+    estimatedReturnDate: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'QutsourcingList',
+    modelName: 'Outsourcinglist',
   });
-  return QutsourcingList;
+  return Outsourcinglist;
 };
