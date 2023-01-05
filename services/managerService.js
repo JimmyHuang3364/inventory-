@@ -13,6 +13,7 @@ const PartNumber = db.PartNumber
 const SubPartNumber = db.SubPartNumber
 const User = db.User
 const WarehousingHistory = db.WarehousingHistory
+const PartnerFactories = db.PartnerFactories
 const { Op } = require("sequelize")
 
 const managerService = {
@@ -665,6 +666,67 @@ const managerService = {
         return callback({ partNumbers: subPartNumbers, warehousingHistories: warehousingHistories, searchText: req.query.searchText })
       }
     }
+  },
+
+  partnerFactories: {
+    async post(req, res, callback) {
+      try {
+        if (!req.body.name) { throw new Error('名稱不可空白') }
+        const [partnerFactory, created] = await PartnerFactories.findOrCreate({
+          where: { name: req.body.name },
+          defaults: {
+            name: req.body.name,
+            address: req.body.address,
+            tel: req.body.tel,
+            fax: req.body.fax,
+            photoLink: req.body.photoLink,
+          }
+        })
+        if (!created) { throw new Error('此協力廠商已存在資料庫') }
+        return callback({ status: 'success', message: `成功新增${req.body.name}於協力廠商資料庫內`, partnerFactory: partnerFactory.toJSON() })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async delete(req, res, callback) {
+      try {
+        const partnerFactory = await PartnerFactories.findByPk(req.params.id)
+        partnerFactory.destroy()
+        return callback({ status: 'success', message: `成功刪除${partnerFactory.toJSON().name}協力廠商資料`, partnerFactory: partnerFactory.toJSON() })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async put(req, res, callback) {
+      try {
+        const partnerFactory = await PartnerFactories.findByPk(req.params.id)
+        partnerFactory.update({
+          name: req.body.name,
+          address: req.body.address,
+          tel: req.body.tel,
+          fax: req.body.fax,
+          photoLink: req.body.photoLink
+        })
+        return callback({ status: 'success', message: `成功修改${req.body.name}協力廠商資料`, partnerFactory: partnerFactory.toJSON() })
+      }
+      catch {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async get(req, res, callback) {
+      try {
+        const partnerFactories = await PartnerFactories.findAll({ raw: true, nest: true })
+        return callback({ status: 'success', partnerFactories: partnerFactories })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: '取得資料錯誤' })
+      }
+    },
   }
 }
 

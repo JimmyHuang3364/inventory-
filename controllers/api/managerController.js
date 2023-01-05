@@ -112,6 +112,30 @@ const managerController = {
     return managerService.signUp(req, res, (data) => {
       return res.json(data)
     })
+  },
+
+  partnerFactories: {
+    post(req, res, callback) {
+      managerService.partnerFactories.post(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    delete(req, res, callback) {
+      managerService.partnerFactories.delete(req, res, (data) => {
+        console.log(data)
+        return res.json(data)
+      })
+    },
+    put(req, res, callback) {
+      managerService.partnerFactories.put(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    get(req, res, callback) {
+      managerService.partnerFactories.get(req, res, (data) => {
+        return res.json(data)
+      })
+    }
   }
 }
 
