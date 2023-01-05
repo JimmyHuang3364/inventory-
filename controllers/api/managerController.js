@@ -122,7 +122,6 @@ const managerController = {
     },
     delete(req, res, callback) {
       managerService.partnerFactories.delete(req, res, (data) => {
-        console.log(data)
         return res.json(data)
       })
     },

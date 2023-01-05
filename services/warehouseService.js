@@ -28,7 +28,6 @@ const warehouseService = {
               nest: true,
               order: [['createdAt', 'DESC'], ['updatedAt', 'DESC']]
             }).then((warehousingHistories) => {
-              console.log(warehousingHistories)
               if (warehousingHistories) {
                 for (i = 0; i < warehousingHistories.length; i++) {
                   warehousingHistories[i].textCreatedAt = `${warehousingHistories[i].createdAt.getFullYear()}/${warehousingHistories[i].createdAt.getMonth() + 1}/${warehousingHistories[i].createdAt.getDate()}`

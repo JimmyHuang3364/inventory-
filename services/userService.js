@@ -9,9 +9,9 @@ const userService = {
         return User.findByPk(req.user.id)
           .then((user) => {
             if (bcrypt.compareSync(req.body.password, user.password)) { // 檢查原始密碼
-              console.log(`!!!!!!!EVENT!!!!!!!`)
-              console.log(`ID:${req.user.id} name:${req.body.name}, the password is changed`)
-              console.log(`!!!!!!!!!!!!!!!!!!!`)
+              // console.log(`!!!!!!!EVENT!!!!!!!`)
+              // console.log(`ID:${req.user.id} name:${req.body.name}, the password is changed`)
+              // console.log(`!!!!!!!!!!!!!!!!!!!`)
               user.update({ password: bcrypt.hashSync(req.body.newPassword, bcrypt.genSaltSync(10), null) }) //加入雜湊並更新密碼
                 .then(() => {
                   callback({ status: 'success', message: '變更密碼成功!!' })

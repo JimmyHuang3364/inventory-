@@ -97,8 +97,6 @@ const warehouseServiceAPI = {
       const shippingList = JSON.parse(req.body.shipmentList)
       const partNumbers = shippingList.filter(item => !item.isSubPart)
       const subPartNumbers = shippingList.filter(item => item.isSubPart)
-      console.log('partNumbers', partNumbers)
-      console.log('subPartNumbers', subPartNumbers)
       //先檢查一般部品數量夠出貨
       for (const item of partNumbers) {
         const partNumber = await PartNumber.findByPk(item.productId)

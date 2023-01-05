@@ -25,14 +25,12 @@ const warehouseController = {
   //入庫
   postWarehousing: (req, res) => {
     warehouseServiceAPI.postWarehousing(req, res, (data) => {
-      console.log(data)
       return res.json(data)
     })
   },
   //出貨
   postShipping: (req, res) => {
     warehouseServiceAPI.postShipping(req, res, (data) => {
-      console.log(data)
       return res.json(data)
     })
   },
