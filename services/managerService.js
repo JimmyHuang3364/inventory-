@@ -14,6 +14,7 @@ const SubPartNumber = db.SubPartNumber
 const User = db.User
 const WarehousingHistory = db.WarehousingHistory
 const PartnerFactories = db.PartnerFactories
+const ProductionProcessItem = db.ProductionProcessItem
 const { Op } = require("sequelize")
 
 const managerService = {
@@ -668,8 +669,8 @@ const managerService = {
     }
   },
 
-  partnerFactories: {
-    async post(req, res, callback) {
+  partnerFactories: {  // 關於協力廠商
+    async post(req, res, callback) {  // 新增協力廠商
       try {
         if (!req.body.name) { throw new Error('名稱不可空白') }
         const [partnerFactory, created] = await PartnerFactories.findOrCreate({
@@ -690,7 +691,7 @@ const managerService = {
       }
     },
 
-    async delete(req, res, callback) {
+    async delete(req, res, callback) {  // 刪除協力廠商
       try {
         const partnerFactory = await PartnerFactories.findByPk(req.params.id)
         partnerFactory.destroy()
@@ -701,7 +702,7 @@ const managerService = {
       }
     },
 
-    async put(req, res, callback) {
+    async put(req, res, callback) {  // 修改協力廠商
       try {
         const partnerFactory = await PartnerFactories.findByPk(req.params.id)
         partnerFactory.update({
@@ -713,15 +714,68 @@ const managerService = {
         })
         return callback({ status: 'success', message: `成功修改${req.body.name}協力廠商資料`, partnerFactory: partnerFactory.toJSON() })
       }
-      catch {
+      catch (error) {
         return callback({ status: 'error', message: `${error}` })
       }
     },
 
-    async get(req, res, callback) {
+    async getAll(req, res, callback) { // 取得全部協力廠商
       try {
         const partnerFactories = await PartnerFactories.findAll({ raw: true, nest: true })
         return callback({ status: 'success', partnerFactories: partnerFactories })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: '取得資料錯誤' })
+      }
+    },
+  },
+
+  productionprocessitems: {  // 關於製程
+    async post(req, res, callback) {  // 新增製程項目
+      try {
+        if (!req.body.name) { throw new Error('名稱不可空白') }
+        const [productionprocessitem, created] = await ProductionProcessItem.findOrCreate({
+          where: { processName: req.body.name },
+          defaults: {
+            processName: req.body.name,
+          }
+        })
+        if (!created) { throw new Error('此製程項目已存在資料庫') }
+        return callback({ status: 'success', message: `成功新增製程(${req.body.name})項目於資料庫內`, productionprocessitem: productionprocessitem.toJSON() })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async delete(req, res, callback) {  // 刪除製程項目
+      try {
+        const productionprocessitem = await ProductionProcessItem.findByPk(req.params.id)
+        productionprocessitem.destroy()
+        return callback({ status: 'success', message: `成功刪除製程(${productionprocessitem.toJSON().processName})項目`, productionprocessitem: productionprocessitem.toJSON() })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async put(req, res, callback) {  // 修改製程項目
+      try {
+        const productionprocessitem = await ProductionProcessItem.findByPk(req.params.id)
+        productionprocessitem.update({
+          processName: req.body.name,
+        })
+        return callback({ status: 'success', message: `成功修改製程(${req.body.name})項目於資料庫內`, productionprocessitem: productionprocessitem.toJSON() })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async getAll(req, res, callback) {  // 取得All製程項目
+      try {
+        const productionprocessitems = await ProductionProcessItem.findAll({ raw: true, nest: true })
+        return callback({ status: 'success', partnerFactories: productionprocessitems })
       }
       catch (error) {
         return callback({ status: 'error', message: '取得資料錯誤' })

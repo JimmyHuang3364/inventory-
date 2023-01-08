@@ -130,8 +130,31 @@ const managerController = {
         return res.json(data)
       })
     },
-    get(req, res, callback) {
-      managerService.partnerFactories.get(req, res, (data) => {
+    getAll(req, res, callback) {
+      managerService.partnerFactories.getAll(req, res, (data) => {
+        return res.json(data)
+      })
+    }
+  },
+
+  productionprocessitems: {
+    post(req, res, callback) {
+      managerService.productionprocessitems.post(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    delete(req, res, callback) {
+      managerService.productionprocessitems.delete(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    put(req, res, callback) {
+      managerService.productionprocessitems.put(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    getAll(req, res, callback) {
+      managerService.productionprocessitems.getAll(req, res, (data) => {
         return res.json(data)
       })
     }

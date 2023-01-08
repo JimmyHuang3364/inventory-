@@ -55,11 +55,17 @@ router.put('/user/password/:id', authenticated, upload.array(), userController.p
 
 router.get('/get_current_user', authenticated, userController.getCurrentUser)
 
-// partner factories
-router.post('/manager/partner_factories/create', authenticated, authenticateManager, upload.array(), managerController.partnerFactories.post) //發出新增客戶請求
+// partner_factories
+router.post('/manager/partner_factories/create', authenticated, authenticateManager, upload.array(), managerController.partnerFactories.post) //發出新增協力廠商
 router.delete('/manager/partner_factories/:id', authenticated, authenticateManager, managerController.partnerFactories.delete) //刪除特一協力廠商資料
 router.put('/manager/partner_factories/:id', authenticated, authenticateManager, managerController.partnerFactories.put) //修改特一協力廠商資料
-router.get('/manager/partner_factories', authenticated, authenticateManager, managerController.partnerFactories.get) //取得所有協力廠商資料
+router.get('/manager/partner_factories', authenticated, authenticateManager, managerController.partnerFactories.getAll) //取得所有協力廠商資料
+
+// production_process_items
+router.post('/manager/production_process_items/create', authenticated, authenticateManager, upload.array(), managerController.productionprocessitems.post) //發出新增製程項目
+router.delete('/manager/production_process_items/:id', authenticated, authenticateManager, managerController.productionprocessitems.delete) //刪除特一製程項目資料
+router.put('/manager/production_process_items/:id', authenticated, authenticateManager, managerController.productionprocessitems.put) //修改特一製程項目資料
+router.get('/manager/production_process_items', authenticated, authenticateManager, managerController.productionprocessitems.getAll) //取得所有製程項目資料
 
 
 module.exports = router
