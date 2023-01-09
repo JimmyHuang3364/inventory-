@@ -3,6 +3,9 @@ const Customer = db.Customer
 const PartNumber = db.PartNumber
 const SubPartNumber = db.SubPartNumber
 const WarehousingHistory = db.WarehousingHistory
+const PartnerFactories = db.PartnerFactories
+const ProductionProcessItem = db.ProductionProcessItem
+const Outsourcinglist = db.Outsourcinglist
 const { Op } = require("sequelize") //sequelize運算子
 
 const warehouseService = {
@@ -396,6 +399,90 @@ const warehouseService = {
     const today = `${todayYear}-${todayMonth}-${todayDate}`
     return callback({ today })
   },
+
+
+  outsourcinglist: {
+    async post(req, res, callback) {  // 新增一項外包
+      try {
+        if (!req.body.partNumberId && !req.body.subPartNumberId) { throw new Error('須填入部品或子部品其中一項') }
+        if (req.body.partNumberId && req.body.subPartNumberId) { throw new Error('部品或子部品只能填入其中一項') }
+        if (!req.body.partnerFactoryId) { throw new Error('協力商不可空白') }
+        if (!req.body.productionProcessItemId) { throw new Error('製程項目不可空白') }
+        if (!req.body.quantity) { throw new Error('發包數量空白') }
+        if (!req.body.actionDate) { throw new Error('發包時間空白') }
+        const outsourcinglist = await Outsourcinglist.create({
+          partNumberId: Number(req.body.partNumberId) ? Number(req.body.partNumberId) : null,
+          subPartNumberId: Number(req.body.subPartNumberId) ? Number(req.body.subPartNumberId) : null,
+          partnerFactoryId: Number(req.body.partnerFactoryId),
+          productionProcessItemId: Number(req.body.productionProcessItemId),
+          quantity: Number(req.body.quantity),
+          actionDate: new Date(req.body.actionDate),
+          estimatedReturnDate: req.body.estimatedReturnDate ? new Date(req.body.estimatedReturnDate) : null
+        })
+        return callback({ status: 'success', message: `成功新增外包清單`, outsourcinglists: outsourcinglist })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async delete(req, res, callback) {  // 刪除一項外包
+      try {
+        const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
+        outsourcinglist.destroy()
+        return callback({ status: 'success', message: `成功刪除`, outsourcinglists: outsourcinglist })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async put(req, res, callback) {  // 修改一項外包
+      try {
+        const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
+        outsourcinglist.update({
+          partNumberId: Number(req.body.partNumberId) ? Number(req.body.partNumberId) : null,
+          subPartNumberId: Number(req.body.subPartNumberId) ? Number(req.body.subPartNumberId) : null,
+          partnerFactoryId: Number(req.body.partnerFactoryId),
+          productionProcessItemId: Number(req.body.productionProcessItemId),
+          quantity: Number(req.body.quantity),
+          actionDate: new Date(req.body.actionDate),
+          estimatedReturnDate: req.body.estimatedReturnDate ? new Date(req.body.estimatedReturnDate) : null
+        })
+        return callback({ status: 'success', message: `成功修改`, outsourcinglists: outsourcinglist })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: `${error}` })
+      }
+    },
+
+    async getAll(req, res, callback) {  // 取得All外包清單
+      try {
+        let outsourcinglists = await Outsourcinglist.findAll({
+          attributes: ['id', 'quantity', 'actionDate', 'estimatedReturnDate'],
+          include: [
+            { model: PartNumber, attributes: ['id', 'name'] },
+            { model: SubPartNumber, attributes: ['id', 'name'] },
+            { model: PartnerFactories, attributes: ['id', 'name'] },
+            { model: ProductionProcessItem, attributes: ['id', 'processname'] },
+          ],
+          raw: true,
+          nest: true
+        })
+
+        outsourcinglists.map(outsourcinglist => {
+          if (!outsourcinglist.PartNumber.id) { delete outsourcinglist.PartNumber }
+          if (!outsourcinglist.SubPartNumber.id) { delete outsourcinglist.SubPartNumber }
+        })
+
+        return callback({ status: 'success', outsourcinglists: outsourcinglists })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: '取得資料錯誤' })
+      }
+    },
+  }
 }
+
 
 module.exports = warehouseService

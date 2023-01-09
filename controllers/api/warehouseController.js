@@ -34,6 +34,29 @@ const warehouseController = {
       return res.json(data)
     })
   },
+
+  outsourcinglist: {
+    post(req, res, callback) {
+      warehouseService.outsourcinglist.post(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    delete(req, res, callback) {
+      warehouseService.outsourcinglist.delete(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    put(req, res, callback) {
+      warehouseService.outsourcinglist.put(req, res, (data) => {
+        return res.json(data)
+      })
+    },
+    getAll(req, res, callback) {
+      warehouseService.outsourcinglist.getAll(req, res, (data) => {
+        return res.json(data)
+      })
+    }
+  }
 }
 
 module.exports = warehouseController
