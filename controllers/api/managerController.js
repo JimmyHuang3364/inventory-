@@ -130,6 +130,11 @@ const managerController = {
         return res.json(data)
       })
     },
+    get(req, res, callback) {
+      managerService.partnerFactories.get(req, res, (data) => {
+        return res.json(data)
+      })
+    },
     getAll(req, res, callback) {
       managerService.partnerFactories.getAll(req, res, (data) => {
         return res.json(data)

@@ -719,6 +719,16 @@ const managerService = {
       }
     },
 
+    async get(req, res, callback) { // 取得其一協力廠商
+      try {
+        const partnerFactory = await partnerFactory.findByPk(req.params.id)
+        return callback({ status: 'success', partnerFactory: partnerFactory.toJSON() })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: '取得資料錯誤' })
+      }
+    },
+
     async getAll(req, res, callback) { // 取得全部協力廠商
       try {
         const partnerFactories = await PartnerFactories.findAll({ raw: true, nest: true })
