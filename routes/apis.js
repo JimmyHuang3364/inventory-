@@ -69,10 +69,11 @@ router.put('/manager/production_process_items/:id', authenticated, authenticateM
 router.get('/manager/production_process_items', authenticated, authenticateManager, managerController.productionprocessitems.getAll) //取得所有製程項目資料
 
 // outsourcinglist
-router.post('/warehouse/outsourcinglist/create', authenticated, upload.array(), warehouseController.outsourcinglist.post) //發出新增製程項目
-router.delete('/warehouse/outsourcinglist/:id', authenticated, warehouseController.outsourcinglist.delete) //刪除特一製程項目資料
-router.put('/warehouse/outsourcinglist/:id', authenticated, warehouseController.outsourcinglist.put) //修改特一製程項目資料
-router.get('/warehouse/outsourcinglist', authenticated, warehouseController.outsourcinglist.getAll) //取得所有製程項目資料
+router.post('/warehouse/outsourcinglist/create', authenticated, upload.array(), warehouseController.outsourcinglist.post) //發出新增外包
+router.delete('/warehouse/outsourcinglist/:id', authenticated, warehouseController.outsourcinglist.delete) //刪除外包資料
+router.put('/warehouse/outsourcinglist/:id', authenticated, warehouseController.outsourcinglist.put) //修改外包資料
+router.get('/warehouse/outsourcinglist/:id', authenticated, warehouseController.outsourcinglist.get) //取得特一外包資料
+router.get('/warehouse/outsourcinglist', authenticated, warehouseController.outsourcinglist.getAll) //取得所有外包資料
 
 
 module.exports = router

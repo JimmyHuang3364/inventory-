@@ -456,6 +456,30 @@ const warehouseService = {
       }
     },
 
+    async get(req, res, callback) {  // 取得All外包清單
+      try {
+        const outsourcinglist = await Outsourcinglist.findByPk(req.params.id, {
+          attributes: ['id', 'quantity', 'actionDate', 'estimatedReturnDate'],
+          include: [
+            { model: PartNumber, attributes: ['id', 'name'] },
+            { model: SubPartNumber, attributes: ['id', 'name'] },
+            { model: PartnerFactories, attributes: ['id', 'name'] },
+            { model: ProductionProcessItem, attributes: ['id', 'processname'] },
+          ],
+          raw: true,
+          nest: true
+        })
+
+        if (!outsourcinglist.PartNumber.id) { delete outsourcinglist.PartNumber }
+        if (!outsourcinglist.SubPartNumber.id) { delete outsourcinglist.SubPartNumber }
+
+        return callback({ status: 'success', outsourcinglist: outsourcinglist })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: '取得資料錯誤' })
+      }
+    },
+
     async getAll(req, res, callback) {  // 取得All外包清單
       try {
         let outsourcinglists = await Outsourcinglist.findAll({

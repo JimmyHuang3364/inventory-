@@ -51,6 +51,11 @@ const warehouseController = {
         return res.json(data)
       })
     },
+    get(req, res, callback) {
+      warehouseService.outsourcinglist.get(req, res, (data) => {
+        return res.json(data)
+      })
+    },
     getAll(req, res, callback) {
       warehouseService.outsourcinglist.getAll(req, res, (data) => {
         return res.json(data)
