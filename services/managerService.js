@@ -721,7 +721,8 @@ const managerService = {
 
     async get(req, res, callback) { // 取得其一協力廠商
       try {
-        const partnerFactory = await partnerFactory.findByPk(req.params.id)
+        console.log('partnerFactory')
+        const partnerFactory = await PartnerFactories.findByPk(req.params.id)
         return callback({ status: 'success', partnerFactory: partnerFactory.toJSON() })
       }
       catch (error) {
