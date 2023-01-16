@@ -745,14 +745,14 @@ const managerService = {
     async post(req, res, callback) {  // 新增製程項目
       try {
         if (!req.body.name) { throw new Error('名稱不可空白') }
-        const [productionprocessitem, created] = await ProductionProcessItem.findOrCreate({
+        const [productionProcessItem, created] = await ProductionProcessItem.findOrCreate({
           where: { processName: req.body.name },
           defaults: {
             processName: req.body.name,
           }
         })
         if (!created) { throw new Error('此製程項目已存在資料庫') }
-        return callback({ status: 'success', message: `成功新增製程(${req.body.name})項目於資料庫內`, productionprocessitem: productionprocessitem.toJSON() })
+        return callback({ status: 'success', message: `成功新增製程(${req.body.name})項目於資料庫內`, productionProcessItem: productionProcessItem.toJSON() })
       }
       catch (error) {
         return callback({ status: 'error', message: `${error}` })
@@ -773,10 +773,11 @@ const managerService = {
     async put(req, res, callback) {  // 修改製程項目
       try {
         const productionprocessitem = await ProductionProcessItem.findByPk(req.params.id)
+        const productionprocessitemOldName = productionprocessitem.processName
         productionprocessitem.update({
           processName: req.body.name,
         })
-        return callback({ status: 'success', message: `成功修改製程(${req.body.name})項目於資料庫內`, productionprocessitem: productionprocessitem.toJSON() })
+        return callback({ status: 'success', message: `成功將製程名稱"${productionprocessitemOldName}"改為"${req.body.name}"`, productionprocessitem: productionprocessitem.toJSON() })
       }
       catch (error) {
         return callback({ status: 'error', message: `${error}` })
@@ -785,8 +786,8 @@ const managerService = {
 
     async getAll(req, res, callback) {  // 取得All製程項目
       try {
-        const productionprocessitems = await ProductionProcessItem.findAll({ raw: true, nest: true })
-        return callback({ status: 'success', partnerFactories: productionprocessitems })
+        const productionProcessItems = await ProductionProcessItem.findAll({ raw: true, nest: true })
+        return callback({ status: 'success', productionProcessItems: productionProcessItems })
       }
       catch (error) {
         return callback({ status: 'error', message: '取得資料錯誤' })
