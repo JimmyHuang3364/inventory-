@@ -61,12 +61,14 @@ router.delete('/manager/partner_factories/:id', authenticated, authenticateManag
 router.put('/manager/partner_factories/:id', authenticated, authenticateManager, upload.array(), managerController.partnerFactories.put) //修改特一協力廠商資料
 router.get('/manager/partner_factories/:id', authenticated, authenticateManager, managerController.partnerFactories.get) //取得特一協力廠商資料
 router.get('/manager/partner_factories', authenticated, authenticateManager, managerController.partnerFactories.getAll) //取得所有協力廠商資料
+router.get('/partner_factories', authenticated, warehouseController.partnerFactories.getAll) //取得所有外包資料
 
 // production_process_items
 router.post('/manager/production_process_items/create', authenticated, authenticateManager, upload.array(), managerController.productionprocessitems.post) //發出新增製程項目
 router.delete('/manager/production_process_items/:id', authenticated, authenticateManager, managerController.productionprocessitems.delete) //刪除特一製程項目資料
 router.put('/manager/production_process_items/:id', authenticated, authenticateManager, upload.array(), managerController.productionprocessitems.put) //修改特一製程項目資料
 router.get('/manager/production_process_items', authenticated, authenticateManager, managerController.productionprocessitems.getAll) //取得所有製程項目資料
+router.get('/production_process_items', authenticated, warehouseController.productionprocessitems.getAll) //取得所有製程項目資料
 
 // outsourcinglist
 router.post('/warehouse/outsourcinglist/create', authenticated, upload.array(), warehouseController.outsourcinglist.post) //發出新增外包

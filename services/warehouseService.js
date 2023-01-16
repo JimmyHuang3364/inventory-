@@ -404,20 +404,21 @@ const warehouseService = {
   outsourcinglist: {
     async post(req, res, callback) {  // 新增一項外包
       try {
-        if (!req.body.partNumberId && !req.body.subPartNumberId) { throw new Error('須填入部品或子部品其中一項') }
-        if (req.body.partNumberId && req.body.subPartNumberId) { throw new Error('部品或子部品只能填入其中一項') }
-        if (!req.body.partnerFactoryId) { throw new Error('協力商不可空白') }
-        if (!req.body.productionProcessItemId) { throw new Error('製程項目不可空白') }
-        if (!req.body.quantity) { throw new Error('發包數量空白') }
-        if (!req.body.actionDate) { throw new Error('發包時間空白') }
+        const outsourcingFormDataList = JSON.parse(req.body.outsourcinglist)
+        console.log(outsourcingFormDataList)
+        if (!outsourcingFormDataList.partNumberId) { throw new Error('品番號不可空白') }
+        if (!outsourcingFormDataList.partnerFactoryId) { throw new Error('協力商不可空白') }
+        if (!outsourcingFormDataList.productionProcessItemId) { throw new Error('製程項目不可空白') }
+        if (!outsourcingFormDataList.quantity) { throw new Error('發包數量空白') }
+        if (!outsourcingFormDataList.actionDate) { throw new Error('發包時間空白') }
         const outsourcinglist = await Outsourcinglist.create({
-          partNumberId: Number(req.body.partNumberId) ? Number(req.body.partNumberId) : null,
-          subPartNumberId: Number(req.body.subPartNumberId) ? Number(req.body.subPartNumberId) : null,
-          partnerFactoryId: Number(req.body.partnerFactoryId),
-          productionProcessItemId: Number(req.body.productionProcessItemId),
-          quantity: Number(req.body.quantity),
-          actionDate: new Date(req.body.actionDate),
-          estimatedReturnDate: req.body.estimatedReturnDate ? new Date(req.body.estimatedReturnDate) : null
+          partNumberId: Number(outsourcingFormDataList.partNumberId) ? Number(outsourcingFormDataList.partNumberId) : null,
+          subPartNumberId: Number(outsourcingFormDataList.subPartNumberId) ? Number(outsourcingFormDataList.subPartNumberId) : null,
+          partnerFactoryId: Number(outsourcingFormDataList.partnerFactoryId),
+          productionProcessItemId: Number(outsourcingFormDataList.productionProcessItemId),
+          quantity: Number(outsourcingFormDataList.quantity),
+          actionDate: new Date(outsourcingFormDataList.actionDate),
+          estimatedReturnDate: outsourcingFormDataList.estimatedReturnDate ? new Date(outsourcingFormDataList.estimatedReturnDate) : null
         })
         return callback({ status: 'success', message: `成功新增外包清單`, outsourcinglists: outsourcinglist })
       }
@@ -488,7 +489,7 @@ const warehouseService = {
             { model: PartNumber, attributes: ['id', 'name'] },
             { model: SubPartNumber, attributes: ['id', 'name'] },
             { model: PartnerFactories, attributes: ['id', 'name'] },
-            { model: ProductionProcessItem, attributes: ['id', 'processname'] },
+            { model: ProductionProcessItem, attributes: ['id', 'processName'] },
           ],
           raw: true,
           nest: true
@@ -503,6 +504,30 @@ const warehouseService = {
       }
       catch (error) {
         return callback({ status: 'error', message: '取得資料錯誤' })
+      }
+    },
+  },
+
+  partnerFactories: {  // 關於協力廠商
+    async getAll(req, res, callback) { // 取得全部協力廠商
+      try {
+        const partnerFactories = await PartnerFactories.findAll({ raw: true, nest: true })
+        return callback({ status: 'success', partnerFactories: partnerFactories })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: '取得資料錯誤' })
+      }
+    },
+  },
+
+  productionprocessitems: {  // 關於製程
+    async getAll(req, res, callback) {  // 取得All製程項目
+      try {
+        const productionProcessItems = await ProductionProcessItem.findAll({ raw: true, nest: true })
+        return callback({ status: 'success', productionProcessItems: productionProcessItems })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: '取得製程項目資料錯誤' })
       }
     },
   }

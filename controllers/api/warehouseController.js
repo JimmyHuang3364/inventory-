@@ -61,6 +61,22 @@ const warehouseController = {
         return res.json(data)
       })
     }
+  },
+
+  partnerFactories: {
+    getAll(req, res, callback) {
+      warehouseService.partnerFactories.getAll(req, res, (data) => {
+        return res.json(data)
+      })
+    }
+  },
+
+  productionprocessitems: {
+    getAll(req, res, callback) {
+      warehouseService.productionprocessitems.getAll(req, res, (data) => {
+        return res.json(data)
+      })
+    }
   }
 }
 
