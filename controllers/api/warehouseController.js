@@ -60,7 +60,12 @@ const warehouseController = {
       warehouseService.outsourcinglist.getAll(req, res, (data) => {
         return res.json(data)
       })
-    }
+    },
+    done(req, res, callback) {
+      warehouseService.outsourcinglist.done(req, res, (data) => {
+        return res.json(data)
+      })
+    },
   },
 
   partnerFactories: {

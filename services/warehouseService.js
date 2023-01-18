@@ -404,23 +404,26 @@ const warehouseService = {
   outsourcinglist: {
     async post(req, res, callback) {  // 新增一項外包
       try {
-        const outsourcingFormDataList = JSON.parse(req.body.outsourcinglist)
-        console.log(outsourcingFormDataList)
-        if (!outsourcingFormDataList.partNumberId) { throw new Error('品番號不可空白') }
-        if (!outsourcingFormDataList.partnerFactoryId) { throw new Error('協力商不可空白') }
-        if (!outsourcingFormDataList.productionProcessItemId) { throw new Error('製程項目不可空白') }
-        if (!outsourcingFormDataList.quantity) { throw new Error('發包數量空白') }
-        if (!outsourcingFormDataList.actionDate) { throw new Error('發包時間空白') }
-        const outsourcinglist = await Outsourcinglist.create({
-          partNumberId: Number(outsourcingFormDataList.partNumberId) ? Number(outsourcingFormDataList.partNumberId) : null,
-          subPartNumberId: Number(outsourcingFormDataList.subPartNumberId) ? Number(outsourcingFormDataList.subPartNumberId) : null,
-          partnerFactoryId: Number(outsourcingFormDataList.partnerFactoryId),
-          productionProcessItemId: Number(outsourcingFormDataList.productionProcessItemId),
-          quantity: Number(outsourcingFormDataList.quantity),
-          actionDate: new Date(outsourcingFormDataList.actionDate),
-          estimatedReturnDate: outsourcingFormDataList.estimatedReturnDate ? new Date(outsourcingFormDataList.estimatedReturnDate) : null
-        })
-        return callback({ status: 'success', message: `成功新增外包清單`, outsourcinglists: outsourcinglist })
+        let outsourcinglists = ''
+        const outsourcingFormDataLists = JSON.parse(req.body.outsourcinglist)
+        for (outsourcingFormDataList of outsourcingFormDataLists) {
+          if (!outsourcingFormDataList.partNumberId) { throw new Error('品番號不可空白') }
+          if (!outsourcingFormDataList.partnerFactoryId) { throw new Error('協力商不可空白') }
+          if (!outsourcingFormDataList.productionProcessItemId) { throw new Error('製程項目不可空白') }
+          if (!outsourcingFormDataList.quantity) { throw new Error('發包數量空白') }
+          if (!outsourcingFormDataList.actionDate) { throw new Error('發包時間空白') }
+          let outsourcinglist = await Outsourcinglist.create({
+            partNumberId: Number(outsourcingFormDataList.partNumberId) ? Number(outsourcingFormDataList.partNumberId) : null,
+            subPartNumberId: Number(outsourcingFormDataList.subPartNumberId) ? Number(outsourcingFormDataList.subPartNumberId) : null,
+            partnerFactoryId: Number(outsourcingFormDataList.partnerFactoryId),
+            productionProcessItemId: Number(outsourcingFormDataList.productionProcessItemId),
+            quantity: Number(outsourcingFormDataList.quantity),
+            actionDate: new Date(outsourcingFormDataList.actionDate),
+            estimatedReturnDate: outsourcingFormDataList.estimatedReturnDate ? new Date(outsourcingFormDataList.estimatedReturnDate) : null
+          })
+          outsourcinglists = outsourcinglist
+        }
+        return callback({ status: 'success', message: `成功新增外包清單`, outsourcinglists: outsourcinglists })
       }
       catch (error) {
         return callback({ status: 'error', message: `${error}` })
@@ -506,6 +509,21 @@ const warehouseService = {
         return callback({ status: 'error', message: '取得資料錯誤' })
       }
     },
+
+    async done(req, res, callback) { // 外包完成後動作
+      try {
+        const partNumber = await PartNumber.findByPk(Number(req.body.partNumberId))
+        partNumber.update({
+          quantity: partNumber.quantity + Number(req.body.quantity)
+        })
+        const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
+        outsourcinglist.destroy()
+        return callback({ status: 'success', message: `成功將外包完成數量加入${partNumber.name}，並移除該外包項目` })
+      }
+      catch (error) {
+        return callback({ status: 'error', message: error })
+      }
+    }
   },
 
   partnerFactories: {  // 關於協力廠商

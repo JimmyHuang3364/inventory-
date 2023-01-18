@@ -72,6 +72,7 @@ router.get('/production_process_items', authenticated, warehouseController.produ
 
 // outsourcinglist
 router.post('/warehouse/outsourcinglist/create', authenticated, upload.array(), warehouseController.outsourcinglist.post) //發出新增外包
+router.post('/warehouse/outsourcinglist/:id/done', authenticated, upload.array(), warehouseController.outsourcinglist.done) //該外包完成回廠
 router.delete('/warehouse/outsourcinglist/:id', authenticated, warehouseController.outsourcinglist.delete) //刪除外包資料
 router.put('/warehouse/outsourcinglist/:id', authenticated, upload.array(), warehouseController.outsourcinglist.put) //修改外包資料
 router.get('/warehouse/outsourcinglist/:id', authenticated, warehouseController.outsourcinglist.get) //取得特一外包資料
