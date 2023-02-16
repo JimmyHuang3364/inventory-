@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     partnerFactoryId: DataTypes.INTEGER,
     productionProcessItemId: DataTypes.INTEGER,
     quantity: DataTypes.INTEGER,
+    note: DataTypes.STRING,
     actionDate: DataTypes.DATE,
     estimatedReturnDate: DataTypes.DATE
   }, {

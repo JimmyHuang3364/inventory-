@@ -27,6 +27,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
+      note: {
+        type: Sequelize.STRING
+      },
       actionDate: {
         allowNull: false,
         type: Sequelize.DATE

@@ -418,6 +418,7 @@ const warehouseService = {
             partnerFactoryId: Number(outsourcingFormDataList.partnerFactoryId),
             productionProcessItemId: Number(outsourcingFormDataList.productionProcessItemId),
             quantity: Number(outsourcingFormDataList.quantity),
+            note: outsourcingFormDataList.note,
             actionDate: new Date(outsourcingFormDataList.actionDate),
             estimatedReturnDate: outsourcingFormDataList.estimatedReturnDate ? new Date(outsourcingFormDataList.estimatedReturnDate) : null
           })
@@ -450,6 +451,7 @@ const warehouseService = {
           partnerFactoryId: Number(req.body.partnerFactoryId),
           productionProcessItemId: Number(req.body.productionProcessItemId),
           quantity: Number(req.body.quantity),
+          note: outsourcingFormDataList.note,
           actionDate: new Date(req.body.actionDate),
           estimatedReturnDate: req.body.estimatedReturnDate ? new Date(req.body.estimatedReturnDate) : null
         })
@@ -463,7 +465,7 @@ const warehouseService = {
     async get(req, res, callback) {  // 取得All外包清單
       try {
         const outsourcinglist = await Outsourcinglist.findByPk(req.params.id, {
-          attributes: ['id', 'quantity', 'actionDate', 'estimatedReturnDate'],
+          attributes: ['id', 'quantity', 'note', 'actionDate', 'estimatedReturnDate'],
           include: [
             { model: PartNumber, attributes: ['id', 'name'] },
             { model: SubPartNumber, attributes: ['id', 'name'] },
@@ -487,7 +489,7 @@ const warehouseService = {
     async getAll(req, res, callback) {  // 取得All外包清單
       try {
         let outsourcinglists = await Outsourcinglist.findAll({
-          attributes: ['id', 'quantity', 'actionDate', 'estimatedReturnDate'],
+          attributes: ['id', 'quantity', 'note', 'actionDate', 'estimatedReturnDate'],
           include: [
             { model: PartNumber, attributes: ['id', 'name'] },
             { model: SubPartNumber, attributes: ['id', 'name'] },
