@@ -404,7 +404,7 @@ const warehouseService = {
   outsourcinglist: {
     async post(req, res, callback) {  // 新增一項外包
       try {
-        let outsourcinglists = ''
+        const partNumbers = [], warehousingHistories = [], outsourcinglists = []
         const outsourcingFormDataLists = JSON.parse(req.body.outsourcinglist)
         for (outsourcingFormDataList of outsourcingFormDataLists) {
           if (!outsourcingFormDataList.partNumberId) { throw new Error('品番號不可空白') }
@@ -412,7 +412,7 @@ const warehouseService = {
           if (!outsourcingFormDataList.productionProcessItemId) { throw new Error('製程項目不可空白') }
           if (!outsourcingFormDataList.quantity) { throw new Error('發包數量空白') }
           if (!outsourcingFormDataList.actionDate) { throw new Error('發包時間空白') }
-          let outsourcinglist = await Outsourcinglist.create({
+          let outsourcinglist = await Outsourcinglist.create({  //新增至資料庫
             partNumberId: Number(outsourcingFormDataList.partNumberId) ? Number(outsourcingFormDataList.partNumberId) : null,
             subPartNumberId: Number(outsourcingFormDataList.subPartNumberId) ? Number(outsourcingFormDataList.subPartNumberId) : null,
             partnerFactoryId: Number(outsourcingFormDataList.partnerFactoryId),
@@ -422,9 +422,28 @@ const warehouseService = {
             actionDate: new Date(outsourcingFormDataList.actionDate),
             estimatedReturnDate: outsourcingFormDataList.estimatedReturnDate ? new Date(outsourcingFormDataList.estimatedReturnDate) : null
           })
-          outsourcinglists = outsourcinglist
+          outsourcinglists.push(outsourcinglist)
+
+          //修改PartNumber數量 PartNumber
+          const partNumber = await PartNumber.findByPk(Number(outsourcingFormDataList.partNumberId))
+          partNumber.update({
+            quantity: partNumber.quantity - Number(outsourcingFormDataList.quantity)
+          })
+          partNumbers.push(partNumber.dataValues)
+
+          //新增出入庫紀錄 WarehousingHistory
+          const warehousingHistory = await WarehousingHistory.create({
+            quntityOfShipping: Number(outsourcingFormDataList.quantity),
+            totalQuntity: Number(partNumber.quantity),
+            note: `外_${outsourcingFormDataList.partnerFactoryName}（${outsourcingFormDataList.productionProcessItemName}）`,
+            customerId: Number(partNumber.customerId),
+            partNumberId: Number(partNumber.id),
+            createdAt: new Date(outsourcingFormDataList.actionDate)
+          })
+          warehousingHistories.push(warehousingHistory)
+
         }
-        return callback({ status: 'success', message: `成功新增外包清單`, outsourcinglists: outsourcinglists })
+        return callback({ status: 'success', message: `成功新增外包清單`, outsourcinglists: outsourcinglists, partNumbers: partNumbers, warehousingHistories: warehousingHistories })
       }
       catch (error) {
         return callback({ status: 'error', message: `${error}` })
@@ -435,14 +454,14 @@ const warehouseService = {
       try {
         const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
         outsourcinglist.destroy()
-        return callback({ status: 'success', message: `成功刪除`, outsourcinglists: outsourcinglist })
+        return callback({ status: 'success', message: `成功刪除，（注意!!出入庫紀錄需自行手動刪除!!）`, outsourcinglists: outsourcinglist })
       }
       catch (error) {
         return callback({ status: 'error', message: `${error}` })
       }
     },
 
-    async put(req, res, callback) {  // 修改一項外包
+    async put(req, res, callback) {  // 修改一項外包，目前沒用到
       try {
         const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
         outsourcinglist.update({
@@ -462,7 +481,7 @@ const warehouseService = {
       }
     },
 
-    async get(req, res, callback) {  // 取得All外包清單
+    async get(req, res, callback) {  // 取得特一外包清單，目前沒用到
       try {
         const outsourcinglist = await Outsourcinglist.findByPk(req.params.id, {
           attributes: ['id', 'quantity', 'note', 'actionDate', 'estimatedReturnDate'],
@@ -520,7 +539,17 @@ const warehouseService = {
         })
         const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
         outsourcinglist.destroy()
-        return callback({ status: 'success', message: `成功將外包完成數量加入${partNumber.name}，並移除該外包項目` })
+        const partnerFactory = await PartnerFactories.findByPk(outsourcinglist.partnerFactoryId)
+        const productionProcessItem = await ProductionProcessItem.findByPk(outsourcinglist.productionProcessItemId)
+        const warehousingHistory = await WarehousingHistory.create({
+          quntityOfWarehousing: Number(outsourcinglist.quantity),
+          totalQuntity: Number(partNumber.quantity),
+          note: `回_${partnerFactory.name}（${productionProcessItem.processName}）`,
+          customerId: Number(partNumber.customerId),
+          partNumberId: Number(partNumber.id),
+          createdAt: new Date(outsourcinglist.createdAt)
+        })
+        return callback({ status: 'success', message: `成功將外包完成數量加入${partNumber.name}，並移除該外包項目`, warehousingHistory: warehousingHistory })
       }
       catch (error) {
         return callback({ status: 'error', message: error })
