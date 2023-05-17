@@ -453,6 +453,8 @@ const warehouseService = {
     async delete(req, res, callback) {  // 刪除一項外包
       try {
         const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
+        let partNumber = await PartNumber.findByPk(outsourcinglist.partNumberId)
+        partNumber.update({ quantity: partNumber.quantity + outsourcinglist.quantity })
         outsourcinglist.destroy()
         return callback({ status: 'success', message: `成功刪除，（注意!!出入庫紀錄需自行手動刪除!!）`, outsourcinglists: outsourcinglist })
       }
@@ -547,14 +549,15 @@ const warehouseService = {
           note: `回_${partnerFactory.name}（${productionProcessItem.processName}）`,
           customerId: Number(partNumber.customerId),
           partNumberId: Number(partNumber.id),
-          createdAt: new Date(outsourcinglist.createdAt)
+          createdAt: helper.fetchTodaysDate()
         })
+        // console.log(helper.fetchTodaysDate())
         return callback({ status: 'success', message: `成功將外包完成數量加入${partNumber.name}，並移除該外包項目`, warehousingHistory: warehousingHistory })
       }
       catch (error) {
         return callback({ status: 'error', message: error })
       }
-    }
+    },
   },
 
   partnerFactories: {  // 關於協力廠商
@@ -579,7 +582,21 @@ const warehouseService = {
         return callback({ status: 'error', message: '取得製程項目資料錯誤' })
       }
     },
-  }
+  },
+}
+
+const helper = {
+  fetchTodaysDate() {  //取得今天日期
+    let thisYear = (new Date().getFullYear()).toString()
+    let thisMonth = ''
+    let thisDate = ''
+
+    if (new Date().getMonth() < 9) { thisMonth = `0${(new Date().getMonth() + 1).toString()}` } else { thisMonth = (new Date().getMonth() + 1).toString() }
+    if (new Date().getDate() < 10) { thisDate = `0${new Date().getDate().toString()}` } else { thisDate = new Date().getDate().toString() }
+
+    const todaysDate = `${thisYear}-${thisMonth}-${thisDate}`
+    return todaysDate
+  },
 }
 
 
