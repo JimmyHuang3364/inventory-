@@ -535,24 +535,45 @@ const warehouseService = {
 
     async done(req, res, callback) { // 外包完成後動作
       try {
-        const partNumber = await PartNumber.findByPk(Number(req.body.partNumberId))
-        partNumber.update({
-          quantity: partNumber.quantity + Number(req.body.quantity)
-        })
+        let partNumberData = null
+        if (req.body.isSub === 'false') {
+          const partNumber = await PartNumber.findByPk(Number(req.body.partNumberId))
+          partNumber.update({
+            quantity: partNumber.quantity + Number(req.body.quantity)
+          })
+          partNumberData = partNumber
+        } else if (req.body.isSub === 'true') {
+          const subPartNumber = await SubPartNumber.findByPk(Number(req.body.partNumberId))
+          subPartNumber.update({
+            quantity: subPartNumber.quantity + Number(req.body.quantity)
+          })
+          partNumberData = subPartNumber
+        }
         const outsourcinglist = await Outsourcinglist.findByPk(req.params.id)
         outsourcinglist.destroy()
         const partnerFactory = await PartnerFactories.findByPk(outsourcinglist.partnerFactoryId)
         const productionProcessItem = await ProductionProcessItem.findByPk(outsourcinglist.productionProcessItemId)
-        const warehousingHistory = await WarehousingHistory.create({
-          quntityOfWarehousing: Number(outsourcinglist.quantity),
-          totalQuntity: Number(partNumber.quantity),
-          note: `回_${partnerFactory.name}（${productionProcessItem.processName}）`,
-          customerId: Number(partNumber.customerId),
-          partNumberId: Number(partNumber.id),
-          createdAt: helper.fetchTodaysDate()
-        })
-        // console.log(helper.fetchTodaysDate())
-        return callback({ status: 'success', message: `成功將外包完成數量加入${partNumber.name}，並移除該外包項目`, warehousingHistory: warehousingHistory })
+        let warehousingHistory = null
+        if (req.body.isSub === 'false') {
+          warehousingHistory = await WarehousingHistory.create({
+            quntityOfWarehousing: Number(outsourcinglist.quantity),
+            totalQuntity: Number(partNumberData.quantity),
+            note: `回_${partnerFactory.name}（${productionProcessItem.processName}）`,
+            customerId: Number(partNumberData.customerId),
+            partNumberId: Number(partNumberData.id),
+            createdAt: helper.fetchTodaysDate()
+          })
+        } else if (req.body.isSub === 'true') {
+          warehousingHistory = await WarehousingHistory.create({
+            quntityOfWarehousing: Number(outsourcinglist.quantity),
+            totalQuntity: Number(partNumberData.quantity),
+            note: `回_${partnerFactory.name}（${productionProcessItem.processName}）`,
+            customerId: Number(partNumberData.customerId),
+            subPartNumberId: Number(partNumberData.id),
+            createdAt: helper.fetchTodaysDate()
+          })
+        }
+        return callback({ status: 'success', message: `成功將外包完成數量加入${partNumberData.name}，並移除該外包項目`, warehousingHistory: warehousingHistory })
       }
       catch (error) {
         return callback({ status: 'error', message: error })
